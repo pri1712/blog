@@ -6,8 +6,5 @@
     "deploymentEnabled": {
       "main": true
     }
-  },
-  "env": {
-    "GITHUB_TOKEN": "@github-token"
   }
 }

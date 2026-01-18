@@ -5,7 +5,9 @@ export interface Repository {
   url: string;
   stargazerCount: number;
   forkCount: number;
-  languages: { name: string }[];
+  languages: {
+    nodes: { name: string }[];
+  };
   primaryLanguage: { name: string; color: string } | null;
   pushedAt: string;
   homepageUrl: string | null;

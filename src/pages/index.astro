@@ -165,76 +165,89 @@ const buildDate = new Date().toISOString();
 </script>
 
 <style>
+  /* MAPPING VARIABLES TO OUR NEW THEME */
+  :root {
+    --accent: #00ff41;        /* Inherited from BaseLayout but reinforced here */
+    --code-border: #1a3c1a;   /* Dark green borders */
+    --comment: #2c8f1b;       /* Dim green for secondary text */
+    --foreground: #4af626;    /* Main text color */
+    --secondary: #d4fb79;     /* A slightly yellowish green for special links */
+  }
+
   .terminal-main {
     max-width: 900px;
     margin: 0 auto;
     padding: 2rem 1rem;
+    position: relative;
+    z-index: 1; /* Ensure content is above scanlines if needed */
   }
 
+  /* BANNER STYLES */
   .quiet-banner {
     margin: 3rem 0;
-    padding: 0;
     text-align: center;
-    opacity: 0.6;
-    min-height: 80px; /* Prevents layout shift when text changes */
+    opacity: 0.8;
+    min-height: 80px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    border-top: 1px dashed var(--code-border);
+    border-bottom: 1px dashed var(--code-border);
   }
 
   .quiet-banner p {
     margin: 0.5rem 0;
-    font-size: 0.95rem;
-    color: var(--comment, #637777);
-    font-weight: 300;
-    letter-spacing: 0.5px;
+    font-size: 1.2rem; /* Larger for VT323 font */
+    color: var(--comment);
   }
 
+  /* INTRO & PROMPTS */
   .intro {
     margin-bottom: 3rem;
-    line-height: 1.8;
+    line-height: 1.6;
+    font-size: 1.2rem;
   }
 
   .prompt {
-    color: var(--accent, #00ff41);
+    color: var(--accent);
     font-weight: bold;
     margin: 1.5rem 0 0.5rem 0;
+    font-size: 1.3rem;
   }
 
   .prompt::before {
     content: '> ';
+    margin-right: 5px;
   }
 
-  .system-status {
-    margin-bottom: 2rem;
-  }
-
+  /* SYSTEM STATUS */
   .status-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem;
-    padding: 1rem;
-    background: rgba(0, 255, 65, 0.05);
-    border: 1px solid var(--accent, #00ff41);
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--code-border);
     margin-top: 1rem;
+    background: rgba(0, 255, 65, 0.02);
   }
 
   .status-indicator {
-    color: var(--accent, #00ff41);
+    color: var(--accent);
+    font-weight: bold;
   }
 
   .status-indicator::before {
     content: '● ';
-    animation: blink 2s infinite;
+    animation: blink 1.5s infinite steps(1); /* steps(1) makes it blink hard like a cursor */
   }
 
   @keyframes blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0.3; }
+    50% { opacity: 0; }
   }
 
+  /* REPO CARDS - TERMINAL STYLE */
   .repo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -243,16 +256,17 @@ const buildDate = new Date().toISOString();
   }
 
   .repo-card {
-    border: 1px solid var(--code-border, #4c5f7a);
-    padding: 1.5rem;
-    background: rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
+    border: 1px solid var(--code-border);
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.5);
+    transition: all 0.2s ease;
+    position: relative;
   }
 
   .repo-card:hover {
-    border-color: var(--accent, #00ff41);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 255, 65, 0.1);
+    border-color: var(--accent);
+    box-shadow: 4px 4px 0px var(--code-border); /* Retro "block" shadow */
+    transform: translate(-2px, -2px);
   }
 
   .repo-header {
@@ -264,51 +278,48 @@ const buildDate = new Date().toISOString();
   }
 
   .repo-name {
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     margin: 0;
-    word-break: break-word;
   }
-
+  
   .repo-name .prompt {
-    font-size: 0.85rem;
-    color: var(--comment, #637777);
-    margin: 0;
+    color: var(--comment);
+    font-size: 1rem; 
   }
 
   .language-badge {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 3px;
-    white-space: nowrap;
+    font-size: 0.9rem;
+    padding: 2px 6px;
+    border: 1px solid var(--comment);
+    color: var(--comment);
+    text-transform: uppercase;
   }
 
   .repo-description {
-    color: var(--comment, #637777);
+    color: var(--comment);
     margin: 0.75rem 0;
-    line-height: 1.5;
+    line-height: 1.4;
     min-height: 3em;
+    font-size: 1.1rem;
   }
 
   .repo-stats {
     display: flex;
     gap: 1rem;
-    font-size: 0.85rem;
+    font-size: 1rem;
     margin: 1rem 0;
-    color: var(--foreground, #d6deeb);
-  }
-
-  .tech-stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1rem 0;
+    color: var(--foreground);
+    border-top: 1px dotted var(--code-border);
+    padding-top: 0.5rem;
   }
 
   .tech-tag {
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--code-border, #4c5f7a);
+    font-size: 0.9rem;
+    padding: 2px 6px;
+    background: transparent;
+    border: 1px solid var(--code-border);
+    margin-right: 5px;
+    color: var(--comment);
   }
 
   .repo-actions {
@@ -318,45 +329,36 @@ const buildDate = new Date().toISOString();
   }
 
   .repo-link {
-    color: var(--accent, #00ff41);
+    color: var(--accent);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+    border: none;
   }
-
+  
   .repo-link:hover {
-    text-decoration: underline;
+    background: var(--accent);
+    color: black;
+    box-shadow: none;
   }
 
-  .repo-link.demo {
-    color: var(--secondary, #8be9fd);
-  }
-
-  .activity-section {
-    margin: 4rem 0 3rem 0;
-  }
-
-  .contribution-graph {
-    margin-top: 1.5rem;
-    text-align: center;
-  }
-
+  /* GRAPH & FOOTER */
   .contribution-graph img {
     max-width: 100%;
     height: auto;
-    border: 1px solid var(--code-border, #4c5f7a);
+    border: 1px solid var(--code-border);
+    filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(50deg) saturate(300%); /* MAKES THE IMAGE GREEN */
+    opacity: 0.8;
   }
-
-  .graph-caption {
-    margin-top: 0.5rem;
-    font-size: 0.85rem;
-    color: var(--comment, #637777);
-    font-style: italic;
+  
+  .contribution-graph img:hover {
+    filter: none; /* Show colors on hover */
+    opacity: 1;
   }
 
   .metrics-footer {
     margin-top: 4rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--code-border, #4c5f7a);
+    border-top: 2px solid var(--code-border);
   }
 
   .metrics {
@@ -364,29 +366,13 @@ const buildDate = new Date().toISOString();
     flex-wrap: wrap;
     gap: 1.5rem;
     margin-top: 1rem;
-    font-size: 0.9rem;
-    color: var(--comment, #637777);
-  }
-
-  /* Modified the span selector to include spans with IDs */
-  .metrics span::before, .metrics span[id]::before {
-    content: '✓ ';
-    color: var(--accent, #00ff41);
+    font-size: 1.1rem;
+    color: var(--comment);
   }
 
   @media (max-width: 768px) {
-    .repo-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .status-header {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .metrics {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
+    .repo-grid { grid-template-columns: 1fr; }
+    .status-header { flex-direction: column; align-items: flex-start; }
+    .metrics { flex-direction: column; gap: 0.5rem; }
   }
 </style>

@@ -3,45 +3,38 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPinnedRepos, getGitHubStats, getContributionGraphUrl } from '../lib/github';
 
-const GITHUB_USERNAME = 'pri1712'; // CHANGE THIS!
+const GITHUB_USERNAME = 'pri1712'; 
 
 // Fetch data at build time
 const repos = await getPinnedRepos(GITHUB_USERNAME);
 const stats = await getGitHubStats(GITHUB_USERNAME);
 const contributionGraphUrl = getContributionGraphUrl(GITHUB_USERNAME);
 
-// Calculate build metrics
+// We keep a fallback date for SEO/crawlers, but JS will override it for users
 const buildDate = new Date().toISOString();
 ---
 
 <BaseLayout title="root@priyanshu:~">
   <main class="terminal-main">
-    <!-- ASCII Banner -->
-    <pre class="ascii-banner">
-╔═══════════════════════════════════════════════════════════╗
-║  ██████╗ ██████╗ ██╗██╗   ██╗ █████╗ ███╗   ██╗███████╗  ║
-║  ██╔══██╗██╔══██╗██║╚██╗ ██╔╝██╔══██╗████╗  ██║██╔════╝  ║
-║  ██████╔╝██████╔╝██║ ╚████╔╝ ███████║██╔██╗ ██║███████╗  ║
-║  ██╔═══╝ ██╔══██╗██║  ╚██╔╝  ██╔══██║██║╚██╗██║╚════██║  ║
-║  ██║     ██║  ██║██║   ██║   ██║  ██║██║ ╚████║███████║  ║
-║  ╚═╝     ╚═╝  ╚═╝╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝  ║
-╚═══════════════════════════════════════════════════════════╝
-    </pre>
+    
+    <div class="quiet-banner" id="nihilist-banner">
+      <p>the result arrived</p>
+      <p>before the request was sent</p>
+      <p>causality is optional</p>
+    </div>
 
-    <!-- Introduction -->
     <section class="intro">
       <p class="prompt">$ whoami</p>
       <p>Engineer who tries to not break things, but ends up doing so anyways :P</p>
       <p class="prompt">$ cat ./bio.txt</p>
       <p>
-        Building high-performance systems and scalable infrastructure. 
+        Building high-performance systems and scalable infrastructure.
         Focused on distributed systems, infrastructure and backend architecture.
       </p>
       <p class="prompt">$ ls -la ~/skills/</p>
       <p>{stats.topLanguages.join(' • ') || 'Loading...'}</p>
     </section>
 
-    <!-- System Status -->
     <section class="system-status">
       <h2 class="prompt">$ systemctl status projects.service</h2>
       <div class="status-header">
@@ -52,7 +45,6 @@ const buildDate = new Date().toISOString();
       </div>
     </section>
 
-    <!-- Project Grid -->
     <section class="projects">
       <div class="repo-grid">
         {repos.map((repo) => (
@@ -62,17 +54,17 @@ const buildDate = new Date().toISOString();
                 <span class="prompt">~/projects/</span>{repo.name}
               </h3>
               {repo.primaryLanguage && (
-                <span 
-                  class="language-badge" 
+                <span
+                  class="language-badge"
                   style={`background-color: ${repo.primaryLanguage.color}20; border: 1px solid ${repo.primaryLanguage.color}`}
                 >
                   {repo.primaryLanguage.name}
                 </span>
               )}
             </div>
-            
+
             <p class="repo-description">{repo.description || 'No description provided'}</p>
-            
+
             <div class="repo-stats">
               <span title="Stars">⭐ {repo.stargazerCount}</span>
               <span title="Forks">🔱 {repo.forkCount}</span>
@@ -104,31 +96,73 @@ const buildDate = new Date().toISOString();
       </div>
     </section>
 
-    <!-- GitHub Activity Graph -->
     <section class="activity-section">
       <h2 class="prompt">$ git log --graph --oneline --all</h2>
       <div class="contribution-graph">
-        <img 
-          src={contributionGraphUrl} 
-          alt="GitHub Contribution Graph" 
+        <img
+          src={contributionGraphUrl}
+          alt="GitHub Contribution Graph"
           loading="lazy"
         />
-        <p class="graph-caption">Aiming to get this to all green someday.</p>
+        <p class="graph-caption">Consistency is key. (Trying to) Ship every day.</p>
       </div>
     </section>
 
-    <!-- Performance Metrics Footer -->
     <footer class="metrics-footer">
       <p class="prompt">$ ./check-performance.sh</p>
       <div class="metrics">
-        <span>Build Time: &lt;2s</span>
-        <span>Total Size: ~45kb</span>
-        <span>Last Deploy: {new Date(buildDate).toLocaleString()}</span>
-        <span>Status: Stable</span>
+        <span id="metric-build">Build Time: &lt;2s</span>
+        <span id="metric-size">Total Size: ~45kb</span>
+        <span id="metric-deploy">Last Deploy: {new Date(buildDate).toLocaleString()}</span>
+        <span id="metric-status">Status: ✓ Optimized</span>
       </div>
     </footer>
   </main>
 </BaseLayout>
+
+<script>
+  // --- RANDOMIZE POETRY ---
+  const poems = [
+    ["memory leaked", "the leak was contained", "the void is now occupied"],
+    ["environment was hostile", "dependencies were ignored", "it runs anyway"],
+    ["packets were lost", "the meaning was kept", "silence is a valid response"],
+    ["the result arrived", "before the request was sent", "causality is optional"],
+    ["the author is gone", "the logic is opaque", "do not touch the light"],
+    ["errors were suppressed", "the baseline shifted", "stability is a feeling"]
+  ];
+
+  const banner = document.getElementById('nihilist-banner');
+  if (banner) {
+    const randomPoem = poems[Math.floor(Math.random() * poems.length)];
+    banner.innerHTML = randomPoem.map(line => `<p>${line}</p>`).join('');
+  }
+
+  // --- RANDOMIZE METRICS ---
+  const buildTimeEl = document.getElementById('metric-build');
+  const sizeEl = document.getElementById('metric-size');
+  const statusEl = document.getElementById('metric-status');
+
+  if (buildTimeEl && sizeEl && statusEl) {
+    // Randomize Build Time (e.g., 0.8s to 2.4s)
+    const time = (Math.random() * 1.6 + 0.8).toFixed(2);
+    buildTimeEl.textContent = `Build Time: ${time}s`;
+
+    // Randomize Size (e.g., 42kb to 48kb)
+    const size = Math.floor(Math.random() * 6 + 42);
+    sizeEl.textContent = `Total Size: ${size}kb`;
+
+    // Randomize Status
+    const statuses = [
+      "✓ Optimized", 
+      "⚠ Degraded", 
+      "✓ Cached (HIT)", 
+      "↻ Revalidating", 
+      "✓ Stable"
+    ];
+    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    statusEl.textContent = `Status: ${randomStatus}`;
+  }
+</script>
 
 <style>
   .terminal-main {
@@ -137,18 +171,23 @@ const buildDate = new Date().toISOString();
     padding: 2rem 1rem;
   }
 
-  .ascii-banner {
-    color: var(--accent, #00ff41);
-    font-size: 0.6rem;
-    line-height: 1.2;
-    margin-bottom: 2rem;
-    overflow-x: auto;
+  .quiet-banner {
+    margin: 3rem 0;
+    padding: 0;
+    text-align: center;
+    opacity: 0.6;
+    min-height: 80px; /* Prevents layout shift when text changes */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
-  @media (max-width: 768px) {
-    .ascii-banner {
-      font-size: 0.35rem;
-    }
+  .quiet-banner p {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    color: var(--comment, #637777);
+    font-weight: 300;
+    letter-spacing: 0.5px;
   }
 
   .intro {
@@ -329,7 +368,8 @@ const buildDate = new Date().toISOString();
     color: var(--comment, #637777);
   }
 
-  .metrics span::before {
+  /* Modified the span selector to include spans with IDs */
+  .metrics span::before, .metrics span[id]::before {
     content: '✓ ';
     color: var(--accent, #00ff41);
   }

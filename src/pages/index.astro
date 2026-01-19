@@ -165,214 +165,152 @@ const buildDate = new Date().toISOString();
 </script>
 
 <style>
-  /* MAPPING VARIABLES TO OUR NEW THEME */
-  :root {
-    --accent: #00ff41;        /* Inherited from BaseLayout but reinforced here */
-    --code-border: #1a3c1a;   /* Dark green borders */
-    --comment: #2c8f1b;       /* Dim green for secondary text */
-    --foreground: #4af626;    /* Main text color */
-    --secondary: #d4fb79;     /* A slightly yellowish green for special links */
-  }
-
   .terminal-main {
-    max-width: 900px;
+    max-width: 850px;
     margin: 0 auto;
-    padding: 2rem 1rem;
-    position: relative;
-    z-index: 1; /* Ensure content is above scanlines if needed */
+    padding: 3rem 1.5rem;
   }
 
-  /* BANNER STYLES */
+  /* THE NIHILISM BANNER - GRUVBOX STYLE */
   .quiet-banner {
-    margin: 3rem 0;
-    text-align: center;
-    opacity: 0.8;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-top: 1px dashed var(--code-border);
-    border-bottom: 1px dashed var(--code-border);
+    margin: 4rem 0;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    position: relative;
+  }
+
+  /* Adds a 'Terminal Tab' effect */
+  .quiet-banner::before {
+    content: "thought.log";
+    position: absolute;
+    top: -12px;
+    left: 10px;
+    background: var(--bg-hard);
+    padding: 0 10px;
+    color: var(--gray);
+    font-size: 0.8rem;
   }
 
   .quiet-banner p {
-    margin: 0.5rem 0;
-    font-size: 1.2rem; /* Larger for VT323 font */
-    color: var(--comment);
+    margin: 0.4rem 0;
+    font-size: 1rem;
+    color: var(--gray);
+    font-style: italic;
   }
 
-  /* INTRO & PROMPTS */
-  .intro {
-    margin-bottom: 3rem;
-    line-height: 1.6;
-    font-size: 1.2rem;
-  }
-
+  /* PROMPTS */
   .prompt {
-    color: var(--accent);
-    font-weight: bold;
-    margin: 1.5rem 0 0.5rem 0;
-    font-size: 1.3rem;
+    color: var(--yellow);
+    font-weight: 700;
+    margin: 2rem 0 0.5rem 0;
   }
 
   .prompt::before {
-    content: '> ';
-    margin-right: 5px;
+    content: 'λ '; /* Using the Lambda symbol for a smarter vibe */
+    color: var(--green);
   }
 
   /* SYSTEM STATUS */
   .status-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--code-border);
-    margin-top: 1rem;
-    background: rgba(0, 255, 65, 0.02);
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--green);
+    background: rgba(184, 187, 38, 0.05);
+    margin: 1rem 0;
   }
 
   .status-indicator {
-    color: var(--accent);
-    font-weight: bold;
+    color: var(--green);
   }
 
   .status-indicator::before {
-    content: '● ';
-    animation: blink 1.5s infinite steps(1); /* steps(1) makes it blink hard like a cursor */
+    content: '[ RUNNING ] ';
+    font-weight: bold;
   }
 
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
-
-  /* REPO CARDS - TERMINAL STYLE */
+  /* PROJECT CARDS */
   .repo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1rem;
   }
 
   .repo-card {
-    border: 1px solid var(--code-border);
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.5);
-    transition: all 0.2s ease;
-    position: relative;
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    background: var(--bg-soft);
+    transition: border-color 0.2s ease;
   }
 
   .repo-card:hover {
-    border-color: var(--accent);
-    box-shadow: 4px 4px 0px var(--code-border); /* Retro "block" shadow */
-    transform: translate(-2px, -2px);
-  }
-
-  .repo-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
+    border-color: var(--gray);
   }
 
   .repo-name {
-    font-size: 1.4rem;
-    margin: 0;
+    color: var(--fg);
+    font-size: 1.1rem;
   }
-  
+
   .repo-name .prompt {
-    color: var(--comment);
-    font-size: 1rem; 
+    color: var(--gray);
+    font-size: 0.9rem;
+    font-weight: normal;
   }
 
   .language-badge {
-    font-size: 0.9rem;
-    padding: 2px 6px;
-    border: 1px solid var(--comment);
-    color: var(--comment);
-    text-transform: uppercase;
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    border: 1px solid var(--border);
+    color: var(--green);
   }
 
   .repo-description {
-    color: var(--comment);
-    margin: 0.75rem 0;
-    line-height: 1.4;
-    min-height: 3em;
-    font-size: 1.1rem;
-  }
-
-  .repo-stats {
-    display: flex;
-    gap: 1rem;
-    font-size: 1rem;
+    color: var(--fg);
+    opacity: 0.8;
+    font-size: 0.95rem;
     margin: 1rem 0;
-    color: var(--foreground);
-    border-top: 1px dotted var(--code-border);
-    padding-top: 0.5rem;
   }
 
   .tech-tag {
-    font-size: 0.9rem;
-    padding: 2px 6px;
-    background: transparent;
-    border: 1px solid var(--code-border);
-    margin-right: 5px;
-    color: var(--comment);
-  }
-
-  .repo-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-right: 8px;
   }
 
   .repo-link {
-    color: var(--accent);
-    text-decoration: none;
-    font-size: 1.1rem;
-    border: none;
-  }
-  
-  .repo-link:hover {
-    background: var(--accent);
-    color: black;
-    box-shadow: none;
+    font-weight: bold;
+    font-size: 0.9rem;
   }
 
-  /* GRAPH & FOOTER */
-  .contribution-graph img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid var(--code-border);
-    filter: grayscale(100%) brightness(0.8) sepia(100%) hue-rotate(50deg) saturate(300%); /* MAKES THE IMAGE GREEN */
-    opacity: 0.8;
-  }
-  
-  .contribution-graph img:hover {
-    filter: none; /* Show colors on hover */
-    opacity: 1;
-  }
-
+  /* FOOTER METRICS */
   .metrics-footer {
-    margin-top: 4rem;
+    margin-top: 5rem;
+    border-top: 1px solid var(--border);
     padding-top: 2rem;
-    border-top: 2px solid var(--code-border);
   }
 
   .metrics {
     display: flex;
     flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-top: 1rem;
-    font-size: 1.1rem;
-    color: var(--comment);
+    gap: 2rem;
+    color: var(--gray);
+    font-size: 0.85rem;
   }
 
-  @media (max-width: 768px) {
+  .metrics span::before {
+    content: ":: ";
+    color: var(--green);
+  }
+
+  /* IMAGE FILTERING (Optional: Makes GitHub graph look Gruvbox) */
+  .contribution-graph img {
+    filter: sepia(0.5) hue-rotate(40deg) contrast(0.9) invert(0.9) brightness(0.8);
+    mix-blend-mode: screen;
+  }
+
+  @media (max-width: 600px) {
     .repo-grid { grid-template-columns: 1fr; }
-    .status-header { flex-direction: column; align-items: flex-start; }
-    .metrics { flex-direction: column; gap: 0.5rem; }
   }
 </style>

@@ -1,8 +1,8 @@
 ---
 // src/layouts/BaseLayout.astro
 const { title } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,37 +11,59 @@ const { title } = Astro.props;
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div class="crt-overlay"></div>
-    <div class="scanline"></div>
-    
+    <div class="gruvbox-overlay"></div>
+
+    <nav class="terminal-nav">
+      <div class="nav-content">
+        <a href="/" class="nav-logo">λ</a>
+        <div class="nav-links">
+          <a href="/" class={currentPath === '/' ? 'active' : ''}>home</a>
+          <a href="/man" class={currentPath === '/man' ? 'active' : ''}>man</a>
+          <a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>blog</a>
+        </div>
+      </div>
+    </nav>
+
     <div class="content">
       <slot />
     </div>
+
+    <footer class="terminal-footer">
+      <p>λ echo "built with astro. hosted on vercel."</p>
+      <div class="footer-links">
+        <a href="https://github.com/yourusername" target="_blank" rel="noopener">github</a> ·
+        <a href="https://twitter.com/yourusername" target="_blank" rel="noopener">twitter</a> ·
+        <a href="mailto:your@email.com">email</a>
+      </div>
+    </footer>
   </body>
 </html>
 
 <style is:global>
-  /* 3. THEME VARIABLES */
+  /* GRUVBOX HYBRID THEME VARIABLES */
   :root {
-    --bg-color: #050505;       /* Deep Black */
-    --text-main: #4af626;      /* Phosphor Green (Standard text) */
-    --text-dim: #2c8f1b;       /* Dim Green (Descriptions) */
-    --accent: #00ff41;         /* Bright Green (Prompts, Links) */
-    --border: #1a3c1a;         /* Dark Green Border */
-    --scanline: rgba(18, 16, 16, 0.5); 
+    --bg-hard: #1d2021;      /* Dark Hard */
+    --bg-soft: #282828;      /* Dark Medium/Soft */
+    --fg: #ebdbb2;           /* Light Paper Foreground */
+    --green: #b8bb26;        /* "Dirty" Green */
+    --yellow: #fabd2f;       /* Prompt Gold */
+    --orange: #fe8019;       /* Accent Orange */
+    --gray: #928374;         /* Comment Gray */
+    --border: #3c3836;       /* Subtle UI lines */
   }
 
   /* RESET & BASE STYLES */
   html, body {
     margin: 0;
     padding: 0;
-    background-color: var(--bg-color);
-    color: var(--text-main);
-    font-family: 'VT323', monospace; /* The retro font */
-    font-size: 18px; /* VT323 needs to be slightly larger to be readable */
+    background-color: var(--bg-hard);
+    color: var(--fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    line-height: 1.6;
     overflow-x: hidden;
   }
 
@@ -49,62 +71,145 @@ const { title } = Astro.props;
     box-sizing: border-box;
   }
 
-  /* SCROLLBAR STYLING */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-  ::-webkit-scrollbar-track {
-    background: var(--bg-color);
-  }
-  ::-webkit-scrollbar-thumb {
-    background: var(--text-dim);
-    border: 1px solid var(--accent);
-  }
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-hard); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gray); }
 
-  /* CRT EFFECTS (Optional but cool) */
-  .crt-overlay {
+  /* SUBTLE TEXTURE OVERLAY */
+  .gruvbox-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: radial-gradient(circle, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.6) 100%);
-    pointer-events: none;
-    z-index: 999;
-  }
-
-  .scanline {
     width: 100%;
-    height: 100px;
-    z-index: 999;
-    background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(51, 255, 51, 0.04) 50%, rgba(0,0,0,0) 100%);
-    opacity: 0.1;
-    position: fixed;
-    bottom: 100%;
-    animation: scanline 10s linear infinite;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02; /* Very faint noise to kill the "flat" look */
     pointer-events: none;
+    z-index: 1000;
   }
 
-  @keyframes scanline {
-    0% { bottom: 100%; }
-    100% { bottom: -100%; }
+  /* NAVIGATION */
+  .terminal-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(29, 32, 33, 0.9);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0;
+    backdrop-filter: blur(8px);
   }
 
-  /* GLOW EFFECT ON TEXT */
-  h1, h2, h3, .prompt {
-    text-shadow: 0 0 5px rgba(74, 246, 38, 0.5);
+  .nav-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
-  
+
+  .nav-logo {
+    font-size: 1.5rem;
+    color: var(--yellow);
+    font-weight: bold;
+    border: none !important;
+  }
+
+  .nav-logo:hover {
+    background: transparent !important;
+    color: var(--orange) !important;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-links a {
+    color: var(--gray);
+    border: none;
+    font-size: 1rem;
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    color: var(--fg);
+    background: transparent;
+    text-shadow: 0 0 10px rgba(235, 219, 178, 0.2);
+  }
+
+  .nav-links a.active::before {
+    content: 'λ ';
+    color: var(--green);
+  }
+
+  /* CONTENT AREA */
+  .content {
+    min-height: calc(100vh - 250px);
+    padding: 2rem 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* FOOTER */
+  .terminal-footer {
+    border-top: 1px solid var(--border);
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-top: 4rem;
+  }
+
+  .terminal-footer p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--gray);
+  }
+
+  .footer-links {
+    margin-top: 1rem;
+  }
+
+  .footer-links a {
+    color: var(--green);
+    border: none;
+    margin: 0 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .footer-links a:hover {
+    color: var(--orange);
+    background: transparent;
+    text-decoration: underline;
+  }
+
+  /* GLOBAL ELEMENT DEFAULTS */
+  h1, h2, h3 {
+    color: var(--fg);
+    font-weight: 700;
+  }
+
+  .prompt {
+    color: var(--yellow);
+  }
+
+  /* LINKS */
   a {
-    color: var(--accent);
+    color: var(--orange);
     text-decoration: none;
-    border-bottom: 1px dashed var(--text-dim);
     transition: all 0.2s ease;
   }
-  
+
   a:hover {
-    background-color: var(--accent);
-    color: var(--bg-color);
-    box-shadow: 0 0 10px var(--accent);
+    background-color: var(--bg-soft);
+    color: var(--yellow);
+  }
+
+  /* MOBILE RESPONSIVE */
+  @media (max-width: 768px) {
+    .nav-content { padding: 0 1.5rem; }
+    .nav-links { gap: 1.2rem; }
   }
 </style>

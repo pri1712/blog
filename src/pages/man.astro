@@ -12,31 +12,30 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
     <section class="man-section">
       <h2>NAME</h2>
       <p class="indent">
-        priyanshu - backend systems engineer, performance optimizer
+        priyanshu - distributed systems engineer, performance obsessed
       </p>
     </section>
 
     <section class="man-section">
       <h2>SYNOPSIS</h2>
       <p class="indent">
-        <strong>priyanshu</strong> [--role=BACKEND_ENGINEER] [--focus=PERFORMANCE]
+        <strong>priyanshu</strong> [--role=SDE] [--focus=SCALE]
         <br/>
-        <strong>priyanshu</strong> --build [SCALABLE_SYSTEMS] --optimize [DATABASES]
+        <strong>priyanshu</strong> --build [PETABYTE_SYSTEMS] --optimize [EVERYTHING]
       </p>
     </section>
 
     <section class="man-section">
       <h2>DESCRIPTION</h2>
       <p class="indent">
-        Backend systems engineer specializing in high-performance applications,
-        distributed systems, and infrastructure optimization. Experienced in
-        building scalable architectures and optimizing critical paths for
-        production workloads.
+        Software Development Engineer at Flipkart working on next-gen logging
+        infrastructure at petabyte scale. Specializes in distributed systems,
+        high-throughput data pipelines, and extreme performance optimization.
       </p>
       <p class="indent">
-        Primary focus areas include system design, database optimization,
-        API development, and performance engineering. Passionate about
-        clean code, efficient algorithms, and measurable improvements.
+        Built consensus systems from scratch, slashed P99 latencies by 95%,
+        and processes 200k+ events/sec in production. Writes code in Go, Rust,
+        Java, and C++ when the JVM isn't fast enough.
       </p>
     </section>
 
@@ -44,22 +43,22 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <h2>OPTIONS</h2>
       <dl class="man-options">
         <dt>--languages</dt>
-        <dd>Python, Go, Rust, TypeScript, SQL, Bash</dd>
+        <dd>C/C++, Rust, Golang, Java, Python, Bash, SQL</dd>
 
         <dt>--frameworks</dt>
-        <dd>FastAPI, Django, Express, Actix, Axum</dd>
+        <dd>Docker, Kubernetes, Apache Pinot, Kafka, PyTorch, TensorFlow</dd>
 
         <dt>--databases</dt>
-        <dd>PostgreSQL, Redis, MongoDB, Cassandra, DynamoDB</dd>
+        <dd>Neo4j, PostgreSQL, Various storage backends (benchmarked extensively)</dd>
 
         <dt>--infrastructure</dt>
-        <dd>Docker, Kubernetes, AWS, GCP, Terraform, CI/CD</dd>
+        <dd>Linux (Arch/Debian), Git/GitHub, Grafana, Distributed Tracing</dd>
 
         <dt>--expertise</dt>
-        <dd>Distributed Systems, Caching, Message Queues, Microservices</dd>
+        <dd>Distributed Systems, System Architecture, Backend Development, Performance Engineering</dd>
 
         <dt>--tools</dt>
-        <dd>Git, Vim, tmux, Linux, Performance Profiling</dd>
+        <dd>Custom profilers, Load testing (Locust), Observability stacks</dd>
       </dl>
     </section>
 
@@ -67,24 +66,34 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <h2>EXPERIENCE</h2>
       
       <div class="job">
-        <h3>Backend Engineer - Company Name</h3>
-        <p class="job-date">2023 - Present</p>
+        <h3>Software Development Engineer 1 - Flipkart</h3>
+        <p class="job-date">July 2025 - Present | Bengaluru, Karnataka</p>
         <ul>
-          <li>Reduced API response time by 60% through query optimization and caching</li>
-          <li>Designed and implemented distributed task queue processing 10M+ jobs/day</li>
-          <li>Built monitoring system reducing incident detection time from 30min to &lt;2min</li>
-          <li>Migrated monolith to microservices architecture serving 1M+ users</li>
+          <li>Architected core components of Flipkart's petabyte-scale logging platform</li>
+          <li>Built high-throughput Kafka pipeline from scratch (200k events/sec)</li>
+          <li>Slashed P99 query latency by 95% via aggressive batching & caching</li>
+          <li>Benchmarked DB backends, schemas, and encodings for production decisions</li>
         </ul>
       </div>
 
       <div class="job">
-        <h3>Systems Engineer - Previous Company</h3>
-        <p class="job-date">2021 - 2023</p>
+        <h3>Software Development Engineer Intern - Flipkart</h3>
+        <p class="job-date">January 2025 - July 2025 | Bengaluru, Karnataka</p>
         <ul>
-          <li>Optimized database queries reducing infrastructure costs by $50k/year</li>
-          <li>Implemented automated deployment pipeline cutting release time by 75%</li>
-          <li>Built real-time analytics pipeline processing 100k events/second</li>
-          <li>Mentored 5 junior engineers on system design and best practices</li>
+          <li>Built observability infrastructure for Java microservices using custom agent</li>
+          <li>Refactored internal logging framework to resolve conflicts & improve extensibility</li>
+          <li>Performed distributed load testing with Locust to benchmark agent overhead</li>
+          <li>Quantified performance regressions in real-world applications</li>
+        </ul>
+      </div>
+
+      <div class="job">
+        <h3>Research Intern - Indian Institute of Science</h3>
+        <p class="job-date">May 2024 - July 2024 | Bengaluru, Karnataka</p>
+        <ul>
+          <li>Integrated ResNet model into existing pipeline, improving accuracy by 3.7%</li>
+          <li>Fine-tuned embedding extractor on 100 hours of speaker verification data</li>
+          <li>Enhanced speaker diarization pipeline accuracy through model optimization</li>
         </ul>
       </div>
     </section>
@@ -93,29 +102,36 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <h2>PROJECTS</h2>
       
       <div class="project">
-        <h3>High-Performance Cache Layer</h3>
+        <h3>Distributed Key-Value Store</h3>
         <ul>
-          <li>Built distributed caching system reducing DB load by 80%</li>
-          <li>Implemented smart cache invalidation with 99.9% hit rate</li>
-          <li>Stack: Redis, Go, Docker</li>
+          <li>Engineered distributed consensus in Go from scratch (no libraries)</li>
+          <li>Implemented Raft: Leader Election, Log Replication, fault tolerance</li>
+          <li>Built Log Compaction & Snapshotting for instant crash recovery</li>
+          <li>Solved network partitions with robust RPC timeouts & heartbeats</li>
+          <li>Achieved linearizable consistency across distributed nodes</li>
+          <li>Stack: Go, custom RPC implementation</li>
         </ul>
       </div>
 
       <div class="project">
-        <h3>Real-Time Analytics Engine</h3>
+        <h3>LiteRAG: High-Performance Java RAG Framework</h3>
         <ul>
-          <li>Designed stream processing pipeline for real-time metrics</li>
-          <li>Processing 50k events/sec with &lt;100ms latency</li>
-          <li>Stack: Kafka, PostgreSQL, Python</li>
+          <li>Built vertical RAG framework with custom inverted index & tokenizer</li>
+          <li>Outperformed standard libraries in memory efficiency</li>
+          <li>Implemented delta-encoding & random-access disk layouts for low-latency retrieval</li>
+          <li>Designed BM25 ranking with length normalization</li>
+          <li>Achieved 75% Recall@K on SQUAD datasets (competitive with off-the-shelf solutions)</li>
+          <li>Stack: Java, custom indexing, BM25 algorithm</li>
         </ul>
       </div>
 
       <div class="project">
-        <h3>Infrastructure Monitoring Dashboard</h3>
+        <h3>Kafka Stress Testing Pipeline</h3>
         <ul>
-          <li>Built custom monitoring solution with Prometheus and Grafana</li>
-          <li>Automated alert routing and incident response</li>
-          <li>Reduced MTTR (Mean Time To Recovery) by 65%</li>
+          <li>Built from-scratch pipeline to validate petabyte-scale storage system</li>
+          <li>Sustained 200k events/sec throughput for extended periods</li>
+          <li>Identified bottlenecks in ingestion layer through systematic testing</li>
+          <li>Stack: Kafka, Go, custom producers</li>
         </ul>
       </div>
     </section>
@@ -123,22 +139,25 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
     <section class="man-section">
       <h2>ACHIEVEMENTS</h2>
       <ul>
-        <li>Optimized critical API endpoint from 2.5s to 180ms (93% improvement)</li>
-        <li>Reduced cloud infrastructure costs by 40% through optimization</li>
-        <li>Open source contributor: 500+ stars across projects</li>
-        <li>Technical blog with 50k+ monthly readers</li>
-        <li>Conference speaker on performance engineering</li>
+        <li>Reduced P99 query latency by 95% on production logging platform</li>
+        <li>Built distributed consensus system without external libraries (pure Go)</li>
+        <li>Processed 200k+ events/sec in production Kafka pipeline</li>
+        <li>Improved ML model accuracy by 3.7% through architecture changes</li>
+        <li>Benchmarked multiple storage backends to drive architecture decisions</li>
+        <li>Achieved 75% Recall@K building RAG system from scratch in Java</li>
       </ul>
     </section>
 
     <section class="man-section">
       <h2>EDUCATION</h2>
       <p class="indent">
-        <strong>B.Tech in Computer Science</strong>
+        <strong>B.Tech in Electronics and Communication Engineering</strong>
         <br/>
-        University Name - 2017-2021
+        National Institute of Technology Karnataka, Surathkal
         <br/>
-        Focus: Algorithms, Distributed Systems, Database Management
+        December 2021 - May 2025
+        <br/>
+        Focus: Distributed Systems, System Architecture, Backend Development
       </p>
     </section>
 
@@ -146,13 +165,14 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <h2>METRICS</h2>
       <pre class="metrics-display">
 ┌─────────────────────────────────────────────┐
-│ Performance Stats                           │
+│ Production Stats                            │
 ├─────────────────────────────────────────────┤
-│ Lines of Code Written:     500,000+         │
-│ Systems Optimized:         50+              │
-│ Bugs Fixed:                1,000+           │
-│ Coffee Consumed:           ∞                │
-│ Stack Overflow Rep:        High             │
+│ Events/sec Processed:  200,000+            │
+│ Petabytes Managed:     Multiple            │
+│ P99 Latency Reduced:   95%                 │
+│ Consensus Nodes:       Linearizable        │
+│ Lines of Rust:         Increasing          │
+│ Coffee Consumed:       ∞                   │
 └─────────────────────────────────────────────┘
       </pre>
     </section>
@@ -160,10 +180,10 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
     <section class="man-section">
       <h2>AVAILABILITY</h2>
       <p class="indent">
-        Open to interesting backend/systems engineering opportunities.
+        Currently building petabyte-scale infrastructure at Flipkart.
         <br/>
-        Especially interested in: performance optimization, distributed systems,
-        infrastructure engineering, and high-scale applications.
+        Always interested in: distributed systems, performance optimization,
+        consensus algorithms, and systems that operate at unreasonable scale.
       </p>
     </section>
 
@@ -171,13 +191,16 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <h2>EXIT STATUS</h2>
       <dl class="man-options">
         <dt>0</dt>
-        <dd>Successfully built scalable system</dd>
+        <dd>System scaled to petabytes successfully</dd>
 
         <dt>1</dt>
-        <dd>Performance targets not met (unacceptable)</dd>
+        <dd>Latency above P99 threshold (unacceptable)</dd>
 
         <dt>2</dt>
-        <dd>Technical debt accumulated (refactoring required)</dd>
+        <dd>Consensus not achieved (network partition detected)</dd>
+
+        <dt>95</dt>
+        <dd>P99 latency improvement achieved (success)</dd>
       </dl>
     </section>
 
@@ -186,131 +209,203 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <p class="indent">
         <a href="/">home(1)</a>,
         <a href="/posts">blog(1)</a>,
-        <a href="https://github.com/your-username">github(1)</a>,
-        <a href="https://linkedin.com/in/your-username">linkedin(1)</a>,
-        <a href="mailto:your-email@example.com">email(1)</a>
+        <a href="https://github.com/priyanshu1712">github(1)</a>,
+        <a href="https://linkedin.com/in/pri1712">linkedin(1)</a>,
+        <a href="mailto:priyanshu17@outlook.com">email(1)</a>
       </p>
     </section>
 
     <section class="man-section">
       <h2>BUGS</h2>
       <p class="indent">
-        Occasionally ships code before coffee. Otherwise, no known bugs.
+        Occasionally writes Rust when Go would suffice. Otherwise, handles network
+        partitions gracefully.
         <br/>
-        Report issues to: <a href="mailto:your-email@example.com">your-email@example.com</a>
+        Report issues to: <a href="mailto:priyanshu17@outlook.com">priyanshu17@outlook.com</a>
       </p>
     </section>
 
     <pre class="man-footer">
-Linux                    2026-01-18              PRIYANSHU(1)
+Linux (Arch)             2026-01-18              PRIYANSHU(1)
     </pre>
   </div>
 </BaseLayout>
 
 <style>
   .man-page {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
-    padding: 2rem 1rem;
-    font-family: 'Courier New', monospace;
+    padding: 3rem 1.5rem;
+    font-family: 'Fira Code', monospace;
     line-height: 1.6;
   }
 
   .man-header,
   .man-footer {
     text-align: center;
-    color: var(--comment, #637777);
+    color: var(--gray);
     margin: 2rem 0;
+    opacity: 0.7;
   }
 
   .man-section {
-    margin: 2rem 0;
+    margin: 3rem 0;
+    padding: 1.5rem;
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    position: relative;
   }
 
+  /* Terminal Tab effect for each section */
+  .man-section::before {
+    position: absolute;
+    top: -12px;
+    left: 10px;
+    background: var(--bg-hard);
+    padding: 0 10px;
+    color: var(--gray);
+    font-size: 0.75rem;
+    font-weight: normal;
+  }
+
+  .man-section:nth-of-type(1)::before { content: "name.txt"; }
+  .man-section:nth-of-type(2)::before { content: "synopsis.sh"; }
+  .man-section:nth-of-type(3)::before { content: "description.md"; }
+  .man-section:nth-of-type(4)::before { content: "options.conf"; }
+  .man-section:nth-of-type(5)::before { content: "experience.log"; }
+  .man-section:nth-of-type(6)::before { content: "projects.json"; }
+  .man-section:nth-of-type(7)::before { content: "achievements.txt"; }
+  .man-section:nth-of-type(8)::before { content: "education.yaml"; }
+  .man-section:nth-of-type(9)::before { content: "metrics.csv"; }
+  .man-section:nth-of-type(10)::before { content: "availability.md"; }
+  .man-section:nth-of-type(11)::before { content: "exit_status.c"; }
+  .man-section:nth-of-type(12)::before { content: "see_also.links"; }
+  .man-section:nth-of-type(13)::before { content: "bugs.report"; }
+
   .man-section h2 {
-    color: var(--accent, #00ff41);
+    color: var(--yellow);
     font-size: 1.1rem;
-    font-weight: bold;
-    margin-bottom: 0.75rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
     text-transform: uppercase;
   }
 
+  .man-section h2::before {
+    content: 'λ ';
+    color: var(--green);
+  }
+
   .man-section h3 {
-    color: var(--foreground, #d6deeb);
+    color: var(--orange);
     font-size: 1rem;
-    margin: 1rem 0 0.5rem 0;
+    margin: 1.5rem 0 0.5rem 0;
+    font-weight: 600;
   }
 
   .indent {
-    margin-left: 2rem;
+    margin-left: 1.5rem;
+    color: var(--fg);
+    opacity: 0.9;
   }
 
   .man-options {
-    margin-left: 2rem;
+    margin-left: 1.5rem;
   }
 
   .man-options dt {
-    color: var(--accent, #00ff41);
-    font-weight: bold;
-    margin-top: 0.75rem;
+    color: var(--green);
+    font-weight: 700;
+    margin-top: 1rem;
+  }
+
+  .man-options dt::before {
+    content: ':: ';
+    color: var(--green);
   }
 
   .man-options dd {
     margin-left: 2rem;
-    color: var(--comment, #637777);
+    color: var(--gray);
+    margin-top: 0.25rem;
   }
 
   .job,
   .project {
-    margin: 1.5rem 0 1.5rem 2rem;
+    margin: 2rem 0 2rem 1.5rem;
+    padding: 1rem;
+    border-left: 2px solid var(--border);
+  }
+
+  .job:hover,
+  .project:hover {
+    border-left-color: var(--gray);
   }
 
   .job-date {
-    color: var(--comment, #637777);
-    font-size: 0.9rem;
-    margin: 0.25rem 0;
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin: 0.25rem 0 0.75rem 0;
+    opacity: 0.8;
   }
 
   .man-section ul {
-    margin-left: 3rem;
-    list-style-type: '▸ ';
+    margin-left: 2rem;
+    list-style-type: none;
   }
 
   .man-section li {
     margin: 0.5rem 0;
-    padding-left: 0.5rem;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .man-section li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--green);
   }
 
   .metrics-display {
-    margin-left: 2rem;
-    color: var(--accent, #00ff41);
-    font-size: 0.9rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    color: var(--green);
+    font-size: 0.85rem;
     line-height: 1.4;
+    border: 1px solid var(--border);
+    background: var(--bg-hard);
   }
 
   .man-section a {
-    color: var(--secondary, #8be9fd);
-    text-decoration: underline;
+    color: var(--aqua);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.2s ease;
   }
 
   .man-section a:hover {
-    color: var(--accent, #00ff41);
+    border-bottom-color: var(--green);
+    color: var(--green);
   }
 
   @media (max-width: 768px) {
     .man-page {
-      padding: 1rem 0.5rem;
+      padding: 2rem 1rem;
+    }
+
+    .man-section {
+      padding: 1rem;
     }
 
     .indent,
     .man-options,
     .job,
     .project {
-      margin-left: 1rem;
+      margin-left: 0.5rem;
     }
 
     .man-section ul {
-      margin-left: 2rem;
+      margin-left: 1rem;
     }
 
     .metrics-display {

@@ -1,40 +1,166 @@
 ---
+// src/pages/posts/index.astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import PostCard from '../../components/PostCard.astro';
-import { getCollection } from 'astro:content';
-
-const posts = (await getCollection('posts'))
-  .filter(post => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title="Posts">
-  <div class="posts">
-    <h1 class="posts-title">Posts</h1>
-    {posts.length === 0 ? (
-      <p>No posts yet. Check back soon!</p>
-    ) : (
-      posts.map((post) => <PostCard post={post} />)
-    )}
+<BaseLayout title="blog">
+  <div class="blog-placeholder">
+    <div class="terminal-box">
+      <h1 class="prompt">λ ls ~/blog/posts/</h1>
+      <pre class="output">
+total 0
+drwxr-xr-x  2 priyanshu priyanshu 4096 Jan 20 20:15 .
+drwxr-xr-x  8 priyanshu priyanshu 4096 Jan 20 20:15 ..
+</pre>
+      
+      <p class="empty-message">
+        <span class="comment"># No posts yet. Writing in progress...</span>
+      </p>
+
+      <div class="coming-soon">
+        <h2>Coming Soon</h2>
+        <ul>
+          <li>Building distributed systems from scratch</li>
+          <li>95% latency improvements: a postmortem</li>
+          <li>Raft consensus without libraries</li>
+          <li>Petabyte-scale logging architecture</li>
+          <li>Why I rewrote it in Rust</li>
+        </ul>
+      </div>
+
+      <div class="cta">
+        <p class="prompt">λ notify-send --action=subscribe</p>
+        <p class="hint">
+          Meanwhile, check out my <a href="/">projects</a> or <a href="/man">experience</a>
+        </p>
+      </div>
+    </div>
   </div>
 </BaseLayout>
 
 <style>
-  .posts-title {
-    position: relative;
-    color: var(--accent);
-    margin-top: 0 !important;
-    margin-bottom: 0 !important;
-    padding-bottom: 15px;
-    border-bottom: 3px dotted var(--accent);
+  .blog-placeholder {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
   }
-  
-  .posts-title::after {
-    content: "";
+
+  .terminal-box {
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    padding: 2rem;
+    position: relative;
+  }
+
+  .terminal-box::before {
+    content: "blog.sh";
     position: absolute;
-    bottom: 2px;
-    display: block;
-    width: 100%;
-    border-bottom: 3px dotted var(--accent);
+    top: -12px;
+    left: 10px;
+    background: var(--bg-hard);
+    padding: 0 10px;
+    color: var(--gray);
+    font-size: 0.8rem;
+  }
+
+  .prompt {
+    color: var(--yellow);
+    font-weight: 700;
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  .prompt::before {
+    content: '';
+    color: var(--green);
+  }
+
+  .output {
+    color: var(--gray);
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .empty-message {
+    margin: 2rem 0;
+    text-align: center;
+  }
+
+  .comment {
+    color: var(--gray);
+    font-style: italic;
+  }
+
+  .coming-soon {
+    margin: 3rem 0;
+    padding: 1.5rem;
+    border-left: 2px solid var(--green);
+  }
+
+  .coming-soon h2 {
+    color: var(--yellow);
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .coming-soon h2::before {
+    content: 'λ ';
+    color: var(--green);
+  }
+
+  .coming-soon ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .coming-soon li {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: var(--fg);
+    opacity: 0.8;
+  }
+
+  .coming-soon li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--green);
+  }
+
+  .cta {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .hint {
+    color: var(--gray);
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .hint a {
+    color: var(--aqua);
+    border-bottom: 1px solid transparent;
+  }
+
+  .hint a:hover {
+    color: var(--green);
+    border-bottom-color: var(--green);
+  }
+
+  @media (max-width: 768px) {
+    .blog-placeholder {
+      padding: 2rem 1rem;
+    }
+
+    .terminal-box {
+      padding: 1.5rem;
+    }
+
+    .output {
+      font-size: 0.75rem;
+    }
   }
 </style>

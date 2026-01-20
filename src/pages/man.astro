@@ -12,7 +12,7 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
     <section class="man-section">
       <h2>NAME</h2>
       <p class="indent">
-        priyanshu - distributed systems engineer, performance obsessed
+        priyanshu - systems engineer, coffee addict (not in that order)
       </p>
     </section>
 
@@ -21,21 +21,21 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <p class="indent">
         <strong>priyanshu</strong> [--role=SDE] [--focus=SCALE]
         <br/>
-        <strong>priyanshu</strong> --build [PETABYTE_SYSTEMS] --optimize [EVERYTHING]
+        <strong>priyanshu</strong> --build [LARGE_SCALE_SYSETEMS] --optimize [EVERYTHING]
       </p>
     </section>
 
     <section class="man-section">
       <h2>DESCRIPTION</h2>
       <p class="indent">
-        Software Development Engineer at Flipkart working on next-gen logging
+        Software Development Engineer at Flipkart working on next-gen logging and tracing
         infrastructure at petabyte scale. Specializes in distributed systems,
         high-throughput data pipelines, and extreme performance optimization.
       </p>
       <p class="indent">
         Built consensus systems from scratch, slashed P99 latencies by 95%,
         and processes 200k+ events/sec in production. Writes code in Go, Rust,
-        Java, and C++ when the JVM isn't fast enough.
+        Java, and C++.
       </p>
     </section>
 
@@ -46,15 +46,15 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
         <dd>C/C++, Rust, Golang, Java, Python, Bash, SQL</dd>
 
         <dt>--frameworks</dt>
-        <dd>Docker, Kubernetes, Apache Pinot, Kafka, PyTorch, TensorFlow</dd>
+        <dd>Docker, Kubernetes, Apache Pinot, Kafka</dd>
 
         <dt>--databases</dt>
-        <dd>Neo4j, PostgreSQL, Various storage backends (benchmarked extensively)</dd>
+        <dd>Neo4j, PostgreSQL, Various storage backends</dd>
 
         <dt>--infrastructure</dt>
         <dd>Linux (Arch/Debian), Git/GitHub, Grafana, Distributed Tracing</dd>
 
-        <dt>--expertise</dt>
+        <dt>--can-explain</dt>
         <dd>Distributed Systems, System Architecture, Backend Development, Performance Engineering</dd>
 
         <dt>--tools</dt>
@@ -69,7 +69,8 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
         <h3>Software Development Engineer 1 - Flipkart</h3>
         <p class="job-date">July 2025 - Present | Bengaluru, Karnataka</p>
         <ul>
-          <li>Architected core components of Flipkart's petabyte-scale logging platform</li>
+          <li>Architected and implemented core components of Flipkart's large-scale logging platform</li>
+          <li>Drove adoption of the above mentioned platform by constantly improving user experience</li>
           <li>Built high-throughput Kafka pipeline from scratch (200k events/sec)</li>
           <li>Slashed P99 query latency by 95% via aggressive batching & caching</li>
           <li>Benchmarked DB backends, schemas, and encodings for production decisions</li>
@@ -157,26 +158,25 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
         <br/>
         December 2021 - May 2025
         <br/>
-        Focus: Distributed Systems, System Architecture, Backend Development
+        Focus: Tried learning some Software Engineering, succeeded i guess
       </p>
     </section>
 
     <section class="man-section">
-      <h2>METRICS</h2>
-      <pre class="metrics-display">
+    	<h2>METRICS</h2>
+  	<pre class="metrics-display">
 ┌─────────────────────────────────────────────┐
 │ Production Stats                            │
 ├─────────────────────────────────────────────┤
-│ Events/sec Processed:  200,000+            │
-│ Petabytes Managed:     Multiple            │
-│ P99 Latency Reduced:   95%                 │
-│ Consensus Nodes:       Linearizable        │
-│ Lines of Rust:         Increasing          │
-│ Coffee Consumed:       ∞                   │
+│ Events/sec Processed:   200,000+            │
+│ Petabytes Managed:      Multiple            │
+│ P99 Latency Reduced:    95%                 │
+│ Consensus Nodes:        Linearizable        │
+│ Lines of Code:          Increasing          │
+│ Coffee Consumed:        Infinite            │
 └─────────────────────────────────────────────┘
-      </pre>
+ 	 </pre>
     </section>
-
     <section class="man-section">
       <h2>AVAILABILITY</h2>
       <p class="indent">
@@ -218,8 +218,7 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
     <section class="man-section">
       <h2>BUGS</h2>
       <p class="indent">
-        Occasionally writes Rust when Go would suffice. Otherwise, handles network
-        partitions gracefully.
+        Occasionally writes Rust when Go would suffice. Otherwise, tries to build cool stuff around core distributed systems.
         <br/>
         Report issues to: <a href="mailto:priyanshu17@outlook.com">priyanshu17@outlook.com</a>
       </p>
@@ -411,5 +410,15 @@ Linux (Arch)             2026-01-18              PRIYANSHU(1)
     .metrics-display {
       font-size: 0.7rem;
     }
+    .metrics-display {
+  font-family: 'JetBrains Mono', monospace;
+  line-height: 1.2;
+  color: var(--green); /* Gruvbox green looks sick for boxes */
+  background: var(--bg-soft);
+  padding: 1rem;
+  display: inline-block; /* Keeps the box tight to the content */
+  white-space: pre;      /* Essential for ASCII */
+  border-radius: 4px;
+}
   }
 </style>

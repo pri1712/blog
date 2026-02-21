@@ -1,16 +1,19 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import mdx from '@astrojs/mdx';
 
-// https://astro.build/config
 export default defineConfig({
   site: 'https://works-on-my-machine-eight.vercel.app',
-  // No base path needed for Vercel (it deploys at root)
-  integrations: [sitemap()],
+
+  integrations: [
+    sitemap(),
+    mdx(),   // <-- Add this
+  ],
+
   markdown: {
     shikiConfig: {
-      theme: 'css-variables',
-      langs: [],
+      theme: 'tokyo-night',
       wrap: true,
     },
   },

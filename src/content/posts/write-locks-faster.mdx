@@ -1,0 +1,115 @@
+---
+title: "Read Locks Are Not Your Friends"
+Image: ../../../public/images/locking-comparison.png
+description: "Why switching to a Read Lock crashed my Rust Tensor Cache performance."
+pubDate: 2026-02-21
+tags: ["rust", "concurrency"]
+---
+import { Image } from 'astro:assets';
+import lockingComparison from '../../assets/images/locking-comparison.png';
+
+## TLDR
+
+On commercial hardware, RwLock was ~5× slower than Mutex for a read-heavy cache workload due to atomic contention and cache-line ping-pong.
+
+## Introduction
+
+This is a story about how "obvious" optimizations can backfire.
+
+While building [Redstone](https://github.com/pri1712/redstone), a high-performance Tensor Cache in Rust, I hit a wall with write-lock contention.I thought a read lock would probably mitigate this (boy, was I wrong :( ). I expected the throughput to go through the roof since multiple threads could finally read simultaneously, the competition was not even close, write locks outperformed read locks by around 5X.
+
+Here is why read locks may perform worse (and destroy expectations).
+
+---
+
+## System Context & Workload
+
+The experiment was simple: I was benchmarking a [Least Recently Used (LRU)](https://en.wikipedia.org/wiki/Least_recently_used) tensor cache.
+
+* **Hardware:** Apple Silicon M4 (10 cores, 16GB RAM).
+* **Software:** Rust 1.92.0, using the `parking_lot::RwLock`.
+* **The Goal:** Maximize the throughput of the `.get()` operation.
+
+In a standard LRU cache, a `get` isn't strictly a "read." You have to update the internal state, to mark an item as recently used. However, I wanted to see if I could improve throughput by treating the lookup as a read and approximating the internal mutation.
+
+---
+
+## The Conventional Wisdom
+
+If you follow the standard documentation, the logic is sound:
+
+1. **Write Lock (`.write()`):** Exclusive access. Only one thread moves at a time.
+2. **Read Lock (`.read()`):** Shared access. Multiple threads have access.
+
+In a read-heavy tensor workload, the `RwLock` should be a massive win. But on modern multi-core chips like the M4, the "cost of admission" for a Read Lock is much higher than you think.
+
+---
+
+## Benchmarks
+
+<Image
+  src={lockingComparison}
+  alt="Mutex vs RwLock comparison"
+  width={650}
+/>
+
+```rust
+
+pub fn get_with_write(&self, key: &str) -> Option<Arc<Tensor>> {
+    let mut inner = self.inner.write();
+    inner.get(key)
+}
+
+pub fn get_with_read(&self, key: &str) -> Option<Arc<Tensor>> {
+     let inner = self.inner.read();
+        if let Some((tensor, _, _)) = inner.map.get(key) {
+            Some(tensor.clone())
+        } else {
+            None
+        }
+}
+
+```
+---
+## Why This Happened: The Hardware Reality
+
+The culprit is a phenomenon known as [**Cache Line Ping-Pong**](https://stackoverflow.com/questions/30684974/are-cache-line-ping-pong-and-false-sharing-the-same#:~:text=Cache%2Dline%20ping%2Dponging,-Cache).
+
+### 1. The write hidden in plain sight (under a lot of documentation)
+
+Even though you are calling `.read()`, you are performing a **write operation** at the hardware level. To track how many readers are currently holding the lock, [`parking_lot`](https://amanieu.github.io/parking_lot/parking_lot/struct.RwLock.html) (and every other `RwLock` implementation) must increment an internal atomic counter.
+
+### 2. The cost of invalidating
+
+Modern CPUs move data in 64-byte chunks called **Cache Lines**. When Core 1 wants to increment the reader count, it must take "Exclusive" ownership of the cache line containing that counter.
+
+When Core 2 tries to read the lock a nanosecond later:
+
+1. Core 1 must **flush** its change to the L3 cache/RAM.
+2. Core 2 must **fetch** that cache line across the internal bus.
+3. Core 2 marks the line as "Modified" to increment its count, invalidating Core 1s copy.
+
+### 3. The performance Death Spiral
+
+In an extremely fast operation like a cache lookup, your threads spend **more time fighting for ownership of the reader-count variable** than they do actually looking up tensors. The cache line pings/bounces back and forth between cores so rapidly that the CPU's memory bus becomes a bottleneck.
+
+> **The Paradox:** A Write Lock is actually less noisy on the hardware bus because it prevents the stampede of cores trying to modify the same atomic counter at the same time. It instead gives control to only a single thread, which performs its intended operation,modifies internal state and gives the lock up.
+
+---
+
+## The Lesson
+
+1. **Beware of Short Critical Sections:** If your work inside a lock takes only a few nanoseconds (like a Hashmap lookup), the overhead of an `RwLock` will almost always outweigh the benefits of concurrency.
+2. **Profile the Hardware:** Use tools like `perf` or [`cargo-flamegraph`](https://github.com/flamegraph-rs/flamegraph). If you see a lot of time spent in `atomic_add`, you have cache contention.
+3. **Consider Sharding:** Consider splitting your one giant cache into multiple buckets so that each holds a specific set of keys and has its own locking mechanisms, this will reduce the number of threads contending for the lock, it may also increase throughput since the number of truly parallel operations increases.
+
+Read locks are **not all** bad and evil, there are a bunch of cases in which they prove to be **much better**:
+1. When you have larger sections in the read path that need to be under a lock, in this case write locks may slow down throughput.
+2. Writes are rare, then reads must be what you optimize for, but just remember to check how large reads actually are, in case of  extremely small reads (order of nanoseconds)  , you would probably be better off having a `Mutex`, or a simpler locking implementation due to the same reason as above.
+
+
+## Conclusion
+
+When using a locking strategy know what you plan to use it for, what the usage patterns are like, and **always** profile your code, it helps to bring weird cases like this to notice.
+
+---

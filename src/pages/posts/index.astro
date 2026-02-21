@@ -1,50 +1,101 @@
 ---
 // src/pages/posts/index.astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('posts'))
+  .filter(post => !post.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
 <BaseLayout title="blog">
-  <div class="blog-placeholder">
-    <div class="terminal-box">
+  <div class="posts-page">
+    <div class="posts-header">
       <h1 class="prompt">λ ls ~/blog/posts/</h1>
-      <pre class="output">
+      <p class="post-count">
+        {posts.length === 0 ? 'No posts yet' : `${posts.length} post${posts.length === 1 ? '' : 's'}`}
+      </p>
+    </div>
+
+    {posts.length === 0 ? (
+      <div class="terminal-box">
+        <pre class="output">
 total 0
 drwxr-xr-x  2 priyanshu priyanshu 4096 Jan 20 20:15 .
 drwxr-xr-x  8 priyanshu priyanshu 4096 Jan 20 20:15 ..
-</pre>
-      
-      <p class="empty-message">
-        <span class="comment"># No posts yet. Writing in progress...</span>
-      </p>
-
-      <div class="coming-soon">
-        <h2>Coming Soon</h2>
-        <ul>
-          <li>Building distributed systems from scratch</li>
-          <li>95% latency improvements: a postmortem</li>
-          <li>Raft consensus without libraries</li>
-          <li>Petabyte-scale logging architecture</li>
-          <li>Why I rewrote it in Rust</li>
-        </ul>
-      </div>
-
-      <div class="cta">
-        <p class="prompt">λ notify-send --action=subscribe</p>
-        <p class="hint">
-          Meanwhile, check out my <a href="/">projects</a> or <a href="/man">experience</a>
+        </pre>
+        
+        <p class="empty-message">
+          <span class="comment"># No posts yet. Writing in progress...</span>
         </p>
+
+        <div class="cta">
+          <p class="hint">
+            Meanwhile, check out my <a href="/">projects</a> or <a href="/man">experience</a>
+          </p>
+        </div>
       </div>
-    </div>
+    ) : (
+      <div class="posts-list">
+        {posts.map((post) => (
+          <article class="post-card">
+            <a href={`/posts/${post.slug}`} class="post-link">
+              <div class="post-header">
+                <h2 class="post-title">{post.data.title}</h2>
+                <time class="post-date">
+                  {post.data.pubDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </time>
+              </div>
+              <p class="post-description">{post.data.description}</p>
+              {post.data.tags && post.data.tags.length > 0 && (
+                <div class="post-tags">
+                  {post.data.tags.map(tag => (
+                    <span class="tag">{tag}</span>
+                  ))}
+                </div>
+              )}
+            </a>
+          </article>
+        ))}
+      </div>
+    )}
   </div>
 </BaseLayout>
 
 <style>
-  .blog-placeholder {
+  .posts-page {
     max-width: 850px;
     margin: 0 auto;
     padding: 3rem 1.5rem;
   }
 
+  .posts-header {
+    margin-bottom: 3rem;
+  }
+
+  .prompt {
+    color: var(--yellow);
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+  }
+
+  .prompt::before {
+    content: 'λ ';
+    color: var(--green);
+  }
+
+  .post-count {
+    color: var(--gray);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* Empty state */
   .terminal-box {
     border: 1px solid var(--border);
     background: var(--bg-soft);
@@ -63,17 +114,6 @@ drwxr-xr-x  8 priyanshu priyanshu 4096 Jan 20 20:15 ..
     font-size: 0.8rem;
   }
 
-  .prompt {
-    color: var(--yellow);
-    font-weight: 700;
-    margin: 1.5rem 0 1rem 0;
-  }
-
-  .prompt::before {
-    content: '';
-    color: var(--green);
-  }
-
   .output {
     color: var(--gray);
     margin: 1rem 0;
@@ -89,43 +129,6 @@ drwxr-xr-x  8 priyanshu priyanshu 4096 Jan 20 20:15 ..
   .comment {
     color: var(--gray);
     font-style: italic;
-  }
-
-  .coming-soon {
-    margin: 3rem 0;
-    padding: 1.5rem;
-    border-left: 2px solid var(--green);
-  }
-
-  .coming-soon h2 {
-    color: var(--yellow);
-    font-size: 1.2rem;
-    margin-bottom: 1rem;
-  }
-
-  .coming-soon h2::before {
-    content: 'λ ';
-    color: var(--green);
-  }
-
-  .coming-soon ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  .coming-soon li {
-    margin: 0.75rem 0;
-    padding-left: 1.5rem;
-    position: relative;
-    color: var(--fg);
-    opacity: 0.8;
-  }
-
-  .coming-soon li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: var(--green);
   }
 
   .cta {
@@ -150,17 +153,108 @@ drwxr-xr-x  8 priyanshu priyanshu 4096 Jan 20 20:15 ..
     border-bottom-color: var(--green);
   }
 
+  /* Posts list */
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .post-card {
+    border: 1px solid var(--border);
+    background: var(--bg-soft);
+    padding: 2rem;
+    position: relative;
+    transition: border-color 0.2s ease;
+  }
+
+  .post-card::before {
+    content: attr(data-filename);
+    position: absolute;
+    top: -12px;
+    left: 10px;
+    background: var(--bg-hard);
+    padding: 0 10px;
+    color: var(--gray);
+    font-size: 0.75rem;
+  }
+
+  .post-card:hover {
+    border-color: var(--green);
+  }
+
+  .post-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .post-title {
+    color: var(--yellow);
+    font-size: 1.3rem;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .post-date {
+    color: var(--gray);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .post-description {
+    color: var(--fg);
+    opacity: 0.9;
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    color: var(--green);
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.75rem;
+    background: var(--bg-hard);
+  }
+
+  .tag::before {
+    content: '#';
+    opacity: 0.5;
+  }
+
   @media (max-width: 768px) {
-    .blog-placeholder {
+    .posts-page {
       padding: 2rem 1rem;
     }
 
-    .terminal-box {
+    .post-card {
       padding: 1.5rem;
     }
 
-    .output {
-      font-size: 0.75rem;
+    .post-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .post-title {
+      font-size: 1.1rem;
     }
   }
 </style>

@@ -8,7 +8,6 @@ const posts = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     author: z.string().optional(),
-    image: image().optional(),   // changed from z.string()
     externalLink: z.string().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),

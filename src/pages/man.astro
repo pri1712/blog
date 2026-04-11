@@ -6,22 +6,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout title="man priyanshu">
   <div class="man-page">
     <pre class="man-header">
-PRIYANSHU(1)              User Commands              PRIYANSHU(1)
+PRIYANSHU(1)                   User Commands                  PRIYANSHU(1)
     </pre>
 
     <section class="man-section">
       <h2>NAME</h2>
       <p class="indent">
-        priyanshu - systems engineer, coffee addict (not in that order)
+        priyanshu - distributed systems engineer, latency adversary
       </p>
     </section>
 
     <section class="man-section">
       <h2>SYNOPSIS</h2>
       <p class="indent">
-        <strong>priyanshu</strong> [--role=SDE] [--focus=SCALE]
+        <strong>priyanshu</strong> [--role=SDE] [--target=BACKEND|INFRA]
         <br/>
-        <strong>priyanshu</strong> --build [LARGE_SCALE_SYSETEMS] --optimize [EVERYTHING]
+        <strong>priyanshu</strong> start --component=raft-consensus --lang=go
       </p>
     </section>
 
@@ -29,36 +29,36 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <h2>DESCRIPTION</h2>
       <p class="indent">
         Software Development Engineer at Flipkart working on next-gen logging and tracing
-        infrastructure at petabyte scale. Specializes in distributed systems,
-        high-throughput data pipelines, and extreme performance optimization.
+        infrastructure at large scale. Specializes in distributed systems,
+        high-throughput data pipelines, and aggressive performance optimization.
       </p>
       <p class="indent">
-        Built consensus systems from scratch, slashed P99 latencies by 95%,
-        and processes 200k+ events/sec in production. Writes code in Go, Rust,
-        Java, and C++.
+        Demonstrates linearizable behavior under high load. Known to build consensus 
+        systems from scratch, slash P99 latencies by 95%, and process 200k+ events/sec 
+        in production environments. Native execution targets include Go, Rust, Java, and C++.
       </p>
     </section>
 
     <section class="man-section">
       <h2>OPTIONS</h2>
       <dl class="man-options">
-        <dt>--languages</dt>
+        <dt>-l, --languages</dt>
         <dd>C/C++, Rust, Golang, Java, Python, Bash, SQL</dd>
 
-        <dt>--frameworks</dt>
+        <dt>-f, --frameworks</dt>
         <dd>Docker, Kubernetes, Apache Pinot, Kafka</dd>
 
-        <dt>--databases</dt>
-        <dd>Neo4j, PostgreSQL, Various storage backends</dd>
+        <dt>-d, --databases</dt>
+        <dd>Neo4j, PostgreSQL, custom storage backends</dd>
 
-        <dt>--infrastructure</dt>
-        <dd>Linux (Arch/Debian), Git/GitHub, Grafana, Distributed Tracing</dd>
+        <dt>-i, --infrastructure</dt>
+        <dd>Linux (Arch/Debian), Git, Grafana, Distributed Tracing</dd>
 
-        <dt>--can-explain</dt>
+        <dt>--capabilities</dt>
         <dd>Distributed Systems, System Architecture, Backend Development, Performance Engineering</dd>
 
-        <dt>--tools</dt>
-        <dd>Custom profilers, Load testing (Locust), Observability stacks</dd>
+        <dt>-t, --toolchain</dt>
+        <dd>Custom profilers, Locust (Load testing), Observability stacks</dd>
       </dl>
     </section>
 
@@ -69,11 +69,11 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
         <h3>Software Development Engineer 1 - Flipkart</h3>
         <p class="job-date">July 2025 - Present | Bengaluru, Karnataka</p>
         <ul>
-          <li>Architected and implemented core components of Flipkart's large-scale logging platform</li>
-          <li>Drove adoption of the above mentioned platform by constantly improving user experience</li>
-          <li>Built high-throughput Kafka pipeline from scratch (200k events/sec)</li>
-          <li>Slashed P99 query latency by 95% via aggressive batching & caching</li>
-          <li>Benchmarked DB backends, schemas, and encodings for production decisions</li>
+          <li>Helped architect and also implemented core components of Flipkart's large-scale logging platform.</li>
+          <li>Drove platform adoption through targeted UX improvements and developer tooling.</li>
+          <li>Built high-throughput Kafka ingestion pipeline from scratch (sustains 200k events/sec).</li>
+          <li>Slashed P99 query latency by 95% via aggressive batching, caching, and query optimization.</li>
+          <li>Benchmarked and evaluated database backends, schemas, and encodings for production deployment.</li>
         </ul>
       </div>
 
@@ -81,10 +81,10 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
         <h3>Software Development Engineer Intern - Flipkart</h3>
         <p class="job-date">January 2025 - July 2025 | Bengaluru, Karnataka</p>
         <ul>
-          <li>Built observability infrastructure for Java microservices using custom agent</li>
-          <li>Refactored internal logging framework to resolve conflicts & improve extensibility</li>
-          <li>Performed distributed load testing with Locust to benchmark agent overhead</li>
-          <li>Quantified performance regressions in real-world applications</li>
+          <li>Built observability infrastructure for Java microservices using a custom bytecode agent.</li>
+          <li>Refactored internal logging framework to resolve dependency conflicts and improve extensibility.</li>
+          <li>Performed distributed load testing with Locust to benchmark and minimize agent overhead.</li>
+          <li>Quantified and resolved performance regressions in real-world application deployments.</li>
         </ul>
       </div>
 
@@ -92,9 +92,9 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
         <h3>Research Intern - Indian Institute of Science</h3>
         <p class="job-date">May 2024 - July 2024 | Bengaluru, Karnataka</p>
         <ul>
-          <li>Integrated ResNet model into existing pipeline, improving accuracy by 3.7%</li>
-          <li>Fine-tuned embedding extractor on 100 hours of speaker verification data</li>
-          <li>Enhanced speaker diarization pipeline accuracy through model optimization</li>
+          <li>Integrated ResNet model into an existing pipeline, improving overall accuracy by 3.7%.</li>
+          <li>Fine-tuned embedding extractors on 100+ hours of speaker verification data.</li>
+          <li>Enhanced speaker diarization pipeline accuracy through targeted model optimization.</li>
         </ul>
       </div>
     </section>
@@ -105,48 +105,25 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <div class="project">
         <h3>Distributed Key-Value Store</h3>
         <ul>
-          <li>Engineered distributed consensus in Go from scratch (no libraries)</li>
-          <li>Implemented Raft: Leader Election, Log Replication, fault tolerance</li>
-          <li>Built Log Compaction & Snapshotting for instant crash recovery</li>
-          <li>Solved network partitions with robust RPC timeouts & heartbeats</li>
-          <li>Achieved linearizable consistency across distributed nodes</li>
-          <li>Stack: Go, custom RPC implementation</li>
+          <li>Engineered a distributed consensus engine in pure Go (zero external libraries).</li>
+          <li>Implemented the Raft protocol: Leader Election, Log Replication, and strict fault tolerance.</li>
+          <li>Built Log Compaction and Snapshotting mechanics for instant crash recovery.</li>
+          <li>Solved network partitions using robust RPC timeouts, heartbeats, and term verification.</li>
+          <li>Achieved linearizable consistency across physically distributed nodes.</li>
         </ul>
       </div>
 
       <div class="project">
-        <h3>LiteRAG: High-Performance Java RAG Framework</h3>
+        <h3>Redstone: High performance ML cache</h3>
         <ul>
-          <li>Built vertical RAG framework with custom inverted index & tokenizer</li>
-          <li>Outperformed standard libraries in memory efficiency</li>
-          <li>Implemented delta-encoding & random-access disk layouts for low-latency retrieval</li>
-          <li>Designed BM25 ranking with length normalization</li>
-          <li>Achieved 75% Recall@K on SQUAD datasets (competitive with off-the-shelf solutions)</li>
-          <li>Stack: Java, custom indexing, BM25 algorithm</li>
+          <li>Building a highly scalable ML cache with native tensor support.</li>
+          <li>Achieved 3k ops/sec for 1-2MB tensor workloads.</li>
+          <li>Architected the overall system from scratch.</li>
+          <li>Implemented zero copy transport, and an overall cache that is comparable to Redis/Memcached for larger sized workloads.</li>
         </ul>
       </div>
 
-      <div class="project">
-        <h3>Kafka Stress Testing Data Pipeline</h3>
-        <ul>
-          <li>Built from-scratch kafka consumers and producers to validate terabyte-scale throughput</li>
-          <li>Sustained 200k events/sec throughput for extended periods</li>
-          <li>Identified bottlenecks in ingestion layer through systematic testing</li>
-          <li>Stack: Kafka, Java, Apache Pinot</li>
-        </ul>
-      </div>
-    </section>
 
-    <section class="man-section">
-      <h2>ACHIEVEMENTS</h2>
-      <ul>
-        <li>Reduced P99 query latency by 95% on production logging platform</li>
-        <li>Built distributed consensus system without external libraries (pure Go)</li>
-        <li>Processed 200k+ events/sec in production Kafka pipeline</li>
-        <li>Improved ML model accuracy by 3.7% through architecture changes</li>
-        <li>Benchmarked multiple storage backends to drive architecture decisions</li>
-        <li>Achieved 75% Recall@K building RAG system from scratch in Java</li>
-      </ul>
     </section>
 
     <section class="man-section">
@@ -158,32 +135,32 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
         <br/>
         December 2021 - May 2025
         <br/>
-        Focus: Tried learning some Software Engineering, succeeded i guess
+        Focus: Computer Architecture, Systems and avoiding the frontend.
       </p>
     </section>
 
     <section class="man-section">
-    	<h2>METRICS</h2>
-  	<pre class="metrics-display">
+        <h2>TELEMETRY</h2>
+      <pre class="metrics-display">
 ┌─────────────────────────────────────────────┐
-│ Production Stats                            │
+│ RUNTIME METRICS                             │
 ├─────────────────────────────────────────────┤
 │ Events/sec Processed:   200,000+            │
 │ Petabytes Managed:      Multiple            │
-│ P99 Latency Reduced:    95%                 │
-│ Consensus Nodes:        Linearizable        │
-│ Lines of Code:          Increasing          │
-│ Coffee Consumed:        Infinite            │
+│ P99 Latency Delta:      -95%                │
+│ Consensus State:        Linearizable        │
+│ Panic Recovery:         Enabled             │
+│ Coffee->Code Ratio:     1:1 (Strict)        │
 └─────────────────────────────────────────────┘
- 	 </pre>
+      </pre>
     </section>
+
     <section class="man-section">
       <h2>AVAILABILITY</h2>
       <p class="indent">
-        Currently building petabyte-scale infrastructure at Flipkart.
-        <br/>
-        Always interested in: distributed systems, performance optimization,
-        consensus algorithms, and systems that operate at unreasonable scale.
+        Always polling for interesting problems involving 
+        distributed systems, database storage engines, consensus algorithms, and architecture 
+        that operates at massive scale.
       </p>
     </section>
 
@@ -191,16 +168,16 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
       <h2>EXIT STATUS</h2>
       <dl class="man-options">
         <dt>0</dt>
-        <dd>System scaled to petabytes successfully</dd>
+        <dd>Execution successful. All systems nominal.</dd>
 
         <dt>1</dt>
-        <dd>Latency above P99 threshold (unacceptable)</dd>
+        <dd>Latency exceeded P99 threshold.</dd>
 
-        <dt>2</dt>
-        <dd>Consensus not achieved (network partition detected)</dd>
+        <dt>137</dt>
+        <dd>OOM (Out of Coffee) Killer invoked.</dd>
 
-        <dt>95</dt>
-        <dd>P99 latency improvement achieved (success)</dd>
+        <dt>255</dt>
+        <dd>Network partition detected. Split-brain imminent.</dd>
       </dl>
     </section>
 
@@ -218,14 +195,15 @@ PRIYANSHU(1)              User Commands              PRIYANSHU(1)
     <section class="man-section">
       <h2>BUGS</h2>
       <p class="indent">
-        Occasionally writes Rust when Go would suffice. Otherwise, tries to build cool stuff around core distributed systems.
-        <br/>
-        Report issues to: <a href="mailto:priyanshu17@outlook.com">priyanshu17@outlook.com</a>
+        Occasionally rewrites perfectly good Go code in Rust for "zero-cost abstractions". 
+        Highly susceptible to falling down database internals rabbit holes. 
+        <br/><br/>
+        Report issues and segfaults to: <a href="mailto:priyanshu17@outlook.com">priyanshu17@outlook.com</a>
       </p>
     </section>
 
     <pre class="man-footer">
-Linux (Arch)             2026-01-18              PRIYANSHU(1)
+Linux (Arch)                 2026-01-18                  PRIYANSHU(1)
     </pre>
   </div>
 </BaseLayout>
@@ -273,13 +251,12 @@ Linux (Arch)             2026-01-18              PRIYANSHU(1)
   .man-section:nth-of-type(4)::before { content: "options.conf"; }
   .man-section:nth-of-type(5)::before { content: "experience.log"; }
   .man-section:nth-of-type(6)::before { content: "projects.json"; }
-  .man-section:nth-of-type(7)::before { content: "achievements.txt"; }
-  .man-section:nth-of-type(8)::before { content: "education.yaml"; }
-  .man-section:nth-of-type(9)::before { content: "metrics.csv"; }
-  .man-section:nth-of-type(10)::before { content: "availability.md"; }
-  .man-section:nth-of-type(11)::before { content: "exit_status.c"; }
-  .man-section:nth-of-type(12)::before { content: "see_also.links"; }
-  .man-section:nth-of-type(13)::before { content: "bugs.report"; }
+  .man-section:nth-of-type(7)::before { content: "education.yaml"; }
+  .man-section:nth-of-type(8)::before { content: "telemetry.csv"; }
+  .man-section:nth-of-type(9)::before { content: "availability.md"; }
+  .man-section:nth-of-type(10)::before { content: "exit_status.c"; }
+  .man-section:nth-of-type(11)::before { content: "see_also.links"; }
+  .man-section:nth-of-type(12)::before { content: "bugs.report"; }
 
   .man-section h2 {
     color: var(--yellow);
@@ -373,6 +350,10 @@ Linux (Arch)             2026-01-18              PRIYANSHU(1)
     line-height: 1.4;
     border: 1px solid var(--border);
     background: var(--bg-hard);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    display: inline-block;
+    white-space: pre;
+    border-radius: 4px;
   }
 
   .man-section a {
@@ -410,15 +391,5 @@ Linux (Arch)             2026-01-18              PRIYANSHU(1)
     .metrics-display {
       font-size: 0.7rem;
     }
-    .metrics-display {
-  font-family: 'JetBrains Mono', monospace;
-  line-height: 1.2;
-  color: var(--green); /* Gruvbox green looks sick for boxes */
-  background: var(--bg-soft);
-  padding: 1rem;
-  display: inline-block; /* Keeps the box tight to the content */
-  white-space: pre;      /* Essential for ASCII */
-  border-radius: 4px;
-}
   }
 </style>

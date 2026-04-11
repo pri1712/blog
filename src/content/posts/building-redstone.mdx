@@ -1,0 +1,105 @@
+---
+title: "Building Redstone: A cache optimized for high throughput AI workloads"
+Image: 
+description: "Every engineer has an innate desire to solve AI storage problems. Here is my go at it."
+pubDate: 2026-04-11
+tags: ["storage", "distributed-systems", "rust"]
+---
+import { Image } from 'astro:assets';
+import redstoneArchitecture from '../../assets/images/redstone-architecture.png';
+
+<div className="tldr-box" style={{ padding: '1.5rem', backgroundColor: 'var(--bg-soft, #282828)', borderLeft: '4px solid var(--green, #b8bb26)', margin: '2rem 0' }}>
+  <h2 style={{ marginTop: 0, color: 'var(--green, #b8bb26)' }}>TLDR;</h2>
+  <p>
+    Tensors are how AI engines represent everything internally. Computing embeddings is expensive, and there are massive computational speedups to be gained by simply retrieving this data from a cache rather than recalculating it. 
+  </p>
+  <p>
+    Since I want to help our future robotic overlords out (maybe they'll spare me in the uprising), here is my attempt at solving the AI storage bottleneck: <strong>Redstone</strong>.
+  </p>
+  <p><strong>What you'll learn in this post:</strong></p>
+  <ul>
+    <li>Why existing caches fall short for ML workloads</li>
+    <li>The core design principles behind Redstone</li>
+    <li>Detailed architecture (from single-node to distributed)</li>
+    <li>Performance trade-offs and failure semantics</li>
+    <li>What's included in the Alpha release</li>
+  </ul>
+</div>
+
+## Why Yet Another Cache?
+
+While general-purpose caches like `Memcached` and `Redis` are incredible pieces of software, AI workloads possess specific characteristics that demand a tailored approach. Tensors aren't standard JSON payloads; they are massive, contiguous blocks of memory. 
+
+Here is why a specialized ML cache makes sense:
+
+* <span style={{ color: 'var(--yellow, #fabd2f)', fontWeight: 'bold' }}>Read-Heavy Access Patterns:</span> While generic web workloads require balanced read/write profiles, ML inference is overwhelmingly read-heavy. Redstone optimizes heavily for lookup throughput.
+* <span style={{ color: 'var(--yellow, #fabd2f)', fontWeight: 'bold' }}>Write-Once, Read-Many (Immutable):</span> Embeddings, once computed, rarely change. This immutability allows us to bypass complex, heavy locking mechanisms that generic caches must maintain to guarantee write consistency.
+
+Redstone is a fully in-memory cache (with tiered memory storage planned for the future) built from the ground up with tensors as first-class citizens. It stores tensors as key-value pairs, allowing inference engines to fetch massive multidimensional arrays over the network with minimal overhead.
+
+---
+
+## Core Design Principles
+
+The architecture of Redstone is driven by five core ideas:
+
+### 1. "Thick Client, Thin Server" Topology
+Redstone intentionally moves cluster intelligence away from the servers. Servers are "dumb" entities; they do not communicate with one another, have no say in cluster management, and are only concerned with storing the data handed to them. 
+The **Client** holds the brains. It manages the cluster state, routes requests, and monitors node health. This allows for massive, performant scaling by eliminating server-to-server chatter.
+
+### 2. Zero-Copy Data Movement
+Moving megabytes of tensor data over a network is expensive. While Redstone uses `gRPC` and Protobuf, we minimize data copies as much as possible to save precious CPU cycles. Furthermore, Redstone utilizes **Streaming RPCs** instead of sending monolithic payloads. This prevents massive tensors from clogging network pipelines.
+
+### 3. Client-Side L1 Caching
+Network hops are the enemy of throughput. Redstone implements a small L1 cache directly on the client side. This allows frequently accessed, smaller tensors to live in the client's local memory, completely bypassing network overhead and RPC latency.
+
+### 4. Client Intelligence & Consistent Hashing
+Because the client routes all data, it uses a **Consistent Hashing** ring to map the hash of a key to a specific server. When a node is added or removed, consistent hashing ensures that only a minimal fraction of the data needs to be remapped. 
+
+The client actively monitors the cluster via heartbeats. If a server goes silent for an extended period, the client marks it as "dead" and seamlessly updates the routing table. 
+
+### 5. Lock-Free Immutable Writes
+As discussed, ML workloads don't mutate existing embeddings frequently. By treating writes as largely immutable, Redstone avoids the devastating lock contention and cache-line ping-pong that plagues traditional caches under heavy concurrent load. 
+
+---
+
+## Architecture & Failure Semantics
+
+Here is a look at the current high-level architecture of Redstone.
+
+<Image
+  src={redstoneArchitecture}
+  alt="High Level Architecture of Redstone"
+  width={1000}
+  style={{ border: '1px solid var(--border-color)', borderRadius: '8px', margin: '2rem 0' }}
+/>
+
+<div className="warning-box" style={{ padding: '1.2rem', backgroundColor: 'rgba(250, 189, 47, 0.1)', borderLeft: '4px solid var(--orange, #fe8019)', margin: '2rem 0' }}>
+  <h3 style={{ marginTop: 0, color: 'var(--orange, #fe8019)' }}>Dealing with Server Death</h3>
+  <p>
+    In distributed systems, failure is a guarantee, not a possibility. When a Redstone server node dies and stops sending heartbeats, the client detects the timeout, purges it from the routing ring, and reroutes subsequent requests.
+  </p>
+  <p style={{ marginBottom: 0 }}>
+    <strong>The Trade-off:</strong> Currently, when a server dies, all data on it is lost. Because Redstone is designed strictly as a <em>cache</em> and not a primary source-of-truth database, this is an acceptable failure mode.
+  </p>
+</div>
+
+### Client Responsibilities at a Glance
+* **Routing:** Directing read/write requests to the correct shard.
+* **Health Monitoring:** Evicting dead nodes from the hash ring.
+* **Lazy Connection Pooling:** Dedicated channels to a server are only created exactly when the first request demands it, saving resources.
+
+---
+
+## Alpha Release Features
+
+This is the earliest version of Redstone, focused on proving the core transport and storage mechanics. The Alpha includes:
+
+* **Distributed Architecture:** Full support for multi-node deployments.
+* **Tensor-Native Storage:** Optimized memory layouts for large payloads.
+* **Streaming Transport:** Chunked gRPC streaming to prevent network bottlenecks.
+* **L1 Client Caching:** Local memory tiers for ultra-fast access.
+* **LRU Eviction:** Standard Least-Recently-Used eviction policies.
+* **Topology Control:** Basic client-side configuration for cluster management.
+
+If you are dealing with ML bottlenecks or just want to take it for a spin, check out the [Redstone repository](https://github.com/pri1712/redstone/tree/main). I would love to hear feedback on the design, or where you'd like to see the project go next.

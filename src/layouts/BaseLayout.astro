@@ -21,7 +21,6 @@ const currentPath = Astro.url.pathname;
         <a href="/" class="nav-logo">λ</a>
         <div class="nav-links">
           <a href="/" class={currentPath === '/' ? 'active' : ''}>home</a>
-          <a href="/man" class={currentPath === '/man' ? 'active' : ''}>man</a>
           <a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>blog</a>
         </div>
       </div>

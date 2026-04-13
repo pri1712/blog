@@ -1,94 +1,71 @@
 ---
-// src/pages/index.astro
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getPinnedRepos, getGitHubStats, getContributionGraphUrl } from '../lib/github';
 
-const GITHUB_USERNAME = 'pri1712'; 
+const GITHUB_USERNAME = 'pri1712';
 
-// Fetch data at build time
 const repos = await getPinnedRepos(GITHUB_USERNAME);
 const stats = await getGitHubStats(GITHUB_USERNAME);
 const contributionGraphUrl = getContributionGraphUrl(GITHUB_USERNAME);
-
-// We keep a fallback date for SEO/crawlers, but JS will override it for users
-const buildDate = new Date().toISOString();
 ---
 
-<BaseLayout title="root@priyanshu:~">
-  <main class="terminal-main">
-    
-    <div class="quiet-banner" id="nihilist-banner">
-      <p>the result arrived</p>
-      <p>before the request was sent</p>
-      <p>causality is optional</p>
-    </div>
+<BaseLayout title="Priyanshu">
+  <main class="container">
 
+    <!-- Intro -->
     <section class="intro">
-      <p class="prompt">$ whoami</p>
-      <p>Engineer who tries to not break things, but ends up doing so anyways :P</p>
-      <p class="prompt">$ cat ./bio.txt</p>
-      <p>
-        Building high-performance systems and scalable infrastructure.
-        Focused on distributed systems, infrastructure and backend architecture.
+      <h1>Priyanshu Soni</h1>
+     <p class="subtitle">
+      Hi! Welcome to this little corner of the internet that I call home. 
+      I post about stuff that I find cool or sometimes just because I have nothing else to do.
       </p>
-      <p class="prompt">$ ls -la ~/skills/</p>
-      <p>{stats.topLanguages.join(' • ') || 'Loading...'}</p>
+
+    <p class="subtitle">
+      I am currently working as a Software Engineer at Flipkart, building observability solutions at scale. 
+      I am trying to get into OSS and enjoy reading about distributed systems, especially databases/storage systems.
+    </p>
     </section>
 
-    <section class="system-status">
-      <h2 class="prompt">$ systemctl status projects.service</h2>
-      <div class="status-header">
-        <span class="status-indicator">● active (running)</span>
-        <span class="stats-summary">
-          {stats.totalRepos} repositories | {stats.totalStars} total stars
-        </span>
-      </div>
+    <!-- Skills -->
+    <section>
+      <h2>Skills</h2>
+      <p class="skills">
+        {stats.topLanguages.join(' · ') || 'Loading...'}
+      </p>
     </section>
 
-    <section class="projects">
-      <div class="repo-grid">
+    <!-- Projects -->
+    <section>
+      <h2>Projects</h2>
+
+      <div class="repo-list">
         {repos.map((repo) => (
-          <article class="repo-card">
+          <article class="repo-item">
             <div class="repo-header">
-              <h3 class="repo-name">
-                <span class="prompt">~/projects/</span>{repo.name}
-              </h3>
+              <h3>{repo.name}</h3>
               {repo.primaryLanguage && (
-                <span
-                  class="language-badge"
-                  style={`background-color: ${repo.primaryLanguage.color}20; border: 1px solid ${repo.primaryLanguage.color}`}
-                >
+                <span class="lang">
                   {repo.primaryLanguage.name}
                 </span>
               )}
             </div>
 
-            <p class="repo-description">{repo.description || 'No description provided'}</p>
+            <p class="desc">
+              {repo.description || 'No description provided'}
+            </p>
 
-            <div class="repo-stats">
-              <span title="Stars">⭐ {repo.stargazerCount}</span>
-              <span title="Forks">🔱 {repo.forkCount}</span>
-              <span title="Last updated">
-                📅 {new Date(repo.pushedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+            <div class="meta">
+              <span>★ {repo.stargazerCount}</span>
+              <span>Forks: {repo.forkCount}</span>
+              <span>
+                Updated {new Date(repo.pushedAt).toLocaleDateString()}
               </span>
             </div>
 
-            {repo.languages.nodes.length > 0 && (
-              <div class="tech-stack">
-                {repo.languages.nodes.map(lang => (
-                  <span class="tech-tag">{lang.name}</span>
-                ))}
-              </div>
-            )}
-
-            <div class="repo-actions">
-              <a href={repo.url} class="repo-link" target="_blank" rel="noopener noreferrer">
-                [View Source →]
-              </a>
+            <div class="links">
+              <a href={repo.url} target="_blank">Source</a>
               {repo.homepageUrl && (
-                <a href={repo.homepageUrl} class="repo-link demo" target="_blank" rel="noopener noreferrer">
-                  [Live Demo →]
-                </a>
+                <a href={repo.homepageUrl} target="_blank">Live</a>
               )}
             </div>
           </article>
@@ -96,221 +73,90 @@ const buildDate = new Date().toISOString();
       </div>
     </section>
 
-    <section class="activity-section">
-      <h2 class="prompt">$ git log --graph --oneline --all</h2>
-      <div class="contribution-graph">
-        <img
-          src={contributionGraphUrl}
-          alt="GitHub Contribution Graph"
-          loading="lazy"
-        />
-        <p class="graph-caption">Consistency is key. (Trying to) Ship every day.</p>
-      </div>
+    <!-- Activity -->
+    <section>
+      <h2>Activity</h2>
+      <img
+        src={contributionGraphUrl}
+        alt="GitHub Contribution Graph"
+        loading="lazy"
+      />
     </section>
 
-    <footer class="metrics-footer">
-      <p class="prompt">$ ./check-performance.sh</p>
-      <div class="metrics">
-        <span id="metric-build">Build Time: &lt;2s</span>
-        <span id="metric-size">Total Size: ~45kb</span>
-        <span id="metric-deploy">Last Deploy: {new Date(buildDate).toLocaleString()}</span>
-        <span id="metric-status">Status: ✓ Optimized</span>
-      </div>
-    </footer>
   </main>
 </BaseLayout>
 
-<script>
-  // --- RANDOMIZE POETRY ---
-  const poems = [
-    ["memory leaked", "the leak was contained", "the void is now occupied"],
-    ["environment was hostile", "dependencies were ignored", "it runs anyway"],
-    ["packets were lost", "the meaning was kept", "silence is a valid response"],
-    ["the result arrived", "before the request was sent", "causality is optional"],
-    ["the author is gone", "the logic is opaque", "do not touch the light"],
-    ["errors were suppressed", "the baseline shifted", "stability is a feeling"]
-  ];
-
-  const banner = document.getElementById('nihilist-banner');
-  if (banner) {
-    const randomPoem = poems[Math.floor(Math.random() * poems.length)];
-    banner.innerHTML = randomPoem.map(line => `<p>${line}</p>`).join('');
-  }
-
-  // --- RANDOMIZE METRICS ---
-  const buildTimeEl = document.getElementById('metric-build');
-  const sizeEl = document.getElementById('metric-size');
-  const statusEl = document.getElementById('metric-status');
-
-  if (buildTimeEl && sizeEl && statusEl) {
-    // Randomize Build Time (e.g., 0.8s to 2.4s)
-    const time = (Math.random() * 1.6 + 0.8).toFixed(2);
-    buildTimeEl.textContent = `Build Time: ${time}s`;
-
-    // Randomize Size (e.g., 42kb to 48kb)
-    const size = Math.floor(Math.random() * 6 + 42);
-    sizeEl.textContent = `Total Size: ${size}kb`;
-
-    // Randomize Status
-    const statuses = [
-      "✓ Optimized", 
-      "⚠ Degraded", 
-      "✓ Cached (HIT)", 
-      "↻ Revalidating", 
-      "✓ Stable"
-    ];
-    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
-    statusEl.textContent = `Status: ${randomStatus}`;
-  }
-</script>
-
 <style>
-  .terminal-main {
-    max-width: 850px;
+  .container {
+    max-width: 800px;
     margin: 0 auto;
     padding: 3rem 1.5rem;
   }
 
-  /* THE NIHILISM BANNER - GRUVBOX STYLE */
-  .quiet-banner {
-    margin: 4rem 0;
-    padding: 2rem;
-    border: 1px solid var(--border);
-    background: var(--bg-soft);
-    position: relative;
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
   }
 
-  /* Adds a 'Terminal Tab' effect */
-  .quiet-banner::before {
-    content: "thought.log";
-    position: absolute;
-    top: -12px;
-    left: 10px;
-    background: var(--bg-hard);
-    padding: 0 10px;
+  h2 {
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+  }
+
+  .subtitle {
     color: var(--gray);
-    font-size: 0.8rem;
+    margin-bottom: 1rem;
   }
 
-  .quiet-banner p {
-    margin: 0.4rem 0;
-    font-size: 1rem;
+  .meta {
     color: var(--gray);
-    font-style: italic;
+    font-size: 0.9rem;
   }
 
-  /* PROMPTS */
-  .prompt {
-    color: var(--yellow);
-    font-weight: 700;
-    margin: 2rem 0 0.5rem 0;
+  .skills {
+    color: var(--fg);
   }
 
-  .prompt::before {
-    content: 'λ '; /* Using the Lambda symbol for a smarter vibe */
-    color: var(--green);
+  .repo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
-  /* SYSTEM STATUS */
-  .status-header {
+  .subtitle {
+  margin-bottom: 1rem;
+  }
+
+  .repo-item {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1rem;
+  }
+
+  .repo-header {
     display: flex;
     justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--green);
-    background: rgba(184, 187, 38, 0.05);
-    margin: 1rem 0;
+    align-items: center;
   }
 
-  .status-indicator {
-    color: var(--green);
-  }
-
-  .status-indicator::before {
-    content: '[ RUNNING ] ';
-    font-weight: bold;
-  }
-
-  /* PROJECT CARDS */
-  .repo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 1rem;
-  }
-
-  .repo-card {
-    border: 1px solid var(--border);
-    padding: 1.5rem;
-    background: var(--bg-soft);
-    transition: border-color 0.2s ease;
-  }
-
-  .repo-card:hover {
-    border-color: var(--gray);
-  }
-
-  .repo-name {
-    color: var(--fg);
-    font-size: 1.1rem;
-  }
-
-  .repo-name .prompt {
-    color: var(--gray);
-    font-size: 0.9rem;
-    font-weight: normal;
-  }
-
-  .language-badge {
-    font-size: 0.7rem;
-    padding: 2px 8px;
-    border: 1px solid var(--border);
-    color: var(--green);
-  }
-
-  .repo-description {
-    color: var(--fg);
-    opacity: 0.8;
-    font-size: 0.95rem;
-    margin: 1rem 0;
-  }
-
-  .tech-tag {
+  .lang {
     font-size: 0.8rem;
     color: var(--gray);
-    margin-right: 8px;
   }
 
-  .repo-link {
-    font-weight: bold;
+  .desc {
+    margin: 0.5rem 0;
+    color: var(--fg);
+    opacity: 0.85;
+  }
+
+  .links a {
+    margin-right: 1rem;
     font-size: 0.9rem;
   }
 
-  /* FOOTER METRICS */
-  .metrics-footer {
-    margin-top: 5rem;
-    border-top: 1px solid var(--border);
-    padding-top: 2rem;
-  }
-
-  .metrics {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    color: var(--gray);
-    font-size: 0.85rem;
-  }
-
-  .metrics span::before {
-    content: ":: ";
-    color: var(--green);
-  }
-
-  /* IMAGE FILTERING (Optional: Makes GitHub graph look Gruvbox) */
-  .contribution-graph img {
-    filter: sepia(0.5) hue-rotate(40deg) contrast(0.9) invert(0.9) brightness(0.8);
-    mix-blend-mode: screen;
-  }
-
-  @media (max-width: 600px) {
-    .repo-grid { grid-template-columns: 1fr; }
+  img {
+    width: 100%;
+    margin-top: 1rem;
   }
 </style>

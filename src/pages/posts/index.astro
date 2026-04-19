@@ -1,5 +1,4 @@
 ---
-// src/pages/posts/index.astro
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
@@ -8,40 +7,29 @@ const posts = (await getCollection('posts'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<BaseLayout title="blog">
-  <div class="posts-page">
-    <div class="posts-header">
-      <h1 class="prompt">λ ls ~/blog/posts/</h1>
-      <p class="post-count">
-        {posts.length === 0 ? 'No posts yet' : `${posts.length} post${posts.length === 1 ? '' : 's'}`}
+<BaseLayout title="Posts">
+  <main class="container">
+
+    <section>
+      <h1>Posts</h1>
+      <p class="subtitle">
+        Writing on systems, infrastructure, and things I find interesting.
       </p>
-    </div>
+    </section>
 
-    {posts.length === 0 ? (
-      <div class="terminal-box">
-        <pre class="output">
-total 0
-drwxr-xr-x  2 priyanshu priyanshu 4096 Jan 20 20:15 .
-drwxr-xr-x  8 priyanshu priyanshu 4096 Jan 20 20:15 ..
-        </pre>
-        
-        <p class="empty-message">
-          <span class="comment"># No posts yet. Writing in progress...</span>
-        </p>
+    <section>
+      {posts.length === 0 ? (
+        <p class="meta">No posts yet.</p>
+      ) : (
+        <ul class="list">
+          {posts.map((post) => (
+            <li class="list-item">
+              <div class="row">
+                <a href={`/posts/${post.slug}`} class="title">
+                  {post.data.title}
+                </a>
 
-        <div class="cta">
-          <p class="hint">
-          </p>
-        </div>
-      </div>
-    ) : (
-      <div class="posts-list">
-        {posts.map((post) => (
-          <article class="post-card">
-            <a href={`/posts/${post.slug}`} class="post-link">
-              <div class="post-header">
-                <h2 class="post-title">{post.data.title}</h2>
-                <time class="post-date">
+                <time class="meta">
                   {post.data.pubDate.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'short',
@@ -49,211 +37,87 @@ drwxr-xr-x  8 priyanshu priyanshu 4096 Jan 20 20:15 ..
                   })}
                 </time>
               </div>
-              <p class="post-description">{post.data.description}</p>
-              {post.data.tags && post.data.tags.length > 0 && (
-                <div class="post-tags">
-                  {post.data.tags.map(tag => (
-                    <span class="tag">{tag}</span>
-                  ))}
-                </div>
-              )}
-            </a>
-          </article>
-        ))}
-      </div>
-    )}
-  </div>
+
+              <p class="desc">
+                {post.data.description}
+              </p>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+
+  </main>
 </BaseLayout>
 
 <style>
-  .posts-page {
-    max-width: 850px;
-    margin: 0 auto;
-    padding: 3rem 1.5rem;
-  }
+ .container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
 
-  .posts-header {
-    margin-bottom: 3rem;
-  }
+/* Header */
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
 
-  .prompt {
-    color: var(--yellow);
-    font-weight: 700;
-    margin: 0 0 0.5rem 0;
-    font-size: 1.5rem;
-  }
+.subtitle {
+  color: var(--gray);
+  margin-bottom: 2rem;
+}
 
-  .prompt::before {
-    content: 'λ ';
-    color: var(--green);
-  }
+/* List */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-  .post-count {
-    color: var(--gray);
-    font-size: 0.9rem;
-    margin: 0;
-  }
+.list-item {
+  margin-bottom: 2.5rem;
+}
 
-  /* Empty state */
-  .terminal-box {
-    border: 1px solid var(--border);
-    background: var(--bg-soft);
-    padding: 2rem;
-    position: relative;
-  }
+/* Title row */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
 
-  .terminal-box::before {
-    content: "blog.sh";
-    position: absolute;
-    top: -12px;
-    left: 10px;
-    background: var(--bg-hard);
-    padding: 0 10px;
-    color: var(--gray);
-    font-size: 0.8rem;
-  }
+/* Title */
+.title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-decoration: none;
+  line-height: 1.4;
+}
 
-  .output {
-    color: var(--gray);
-    margin: 1rem 0;
-    font-size: 0.9rem;
-    line-height: 1.6;
-  }
+.title:hover {
+  text-decoration: underline;
+}
 
-  .empty-message {
-    margin: 2rem 0;
-    text-align: center;
-  }
+/* Date */
+.meta {
+  font-size: 0.8rem;
+  color: var(--gray);
+  white-space: nowrap;
+}
 
-  .comment {
-    color: var(--gray);
-    font-style: italic;
-  }
+/* Description */
+.desc {
+  margin-top: 0.4rem;
+  color: var(--gray);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
 
-  .cta {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--border);
-  }
-
-  .hint {
-    color: var(--gray);
-    text-align: center;
-    margin-top: 1rem;
-  }
-
-  .hint a {
-    color: var(--aqua);
-    border-bottom: 1px solid transparent;
-  }
-
-  .hint a:hover {
-    color: var(--green);
-    border-bottom-color: var(--green);
-  }
-
-  /* Posts list */
-  .posts-list {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .post-card {
-    border: 1px solid var(--border);
-    background: var(--bg-soft);
-    padding: 2rem;
-    position: relative;
-    transition: border-color 0.2s ease;
-  }
-
-  .post-card::before {
-    content: attr(data-filename);
-    position: absolute;
-    top: -12px;
-    left: 10px;
-    background: var(--bg-hard);
-    padding: 0 10px;
-    color: var(--gray);
-    font-size: 0.75rem;
-  }
-
-  .post-card:hover {
-    border-color: var(--green);
-  }
-
-  .post-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-
-  .post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .post-title {
-    color: var(--yellow);
-    font-size: 1.3rem;
-    margin: 0;
-    font-weight: 600;
-  }
-
-  .post-date {
-    color: var(--gray);
-    font-size: 0.85rem;
-    white-space: nowrap;
-  }
-
-  .post-description {
-    color: var(--fg);
-    opacity: 0.9;
-    margin: 0 0 1rem 0;
-    line-height: 1.6;
-  }
-
-  .post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    color: var(--green);
-    border: 1px solid var(--border);
-    padding: 0.25rem 0.75rem;
-    background: var(--bg-hard);
-  }
-
-  .tag::before {
-    content: '#';
-    opacity: 0.5;
-  }
-
-  @media (max-width: 768px) {
-    .posts-page {
-      padding: 2rem 1rem;
-    }
-
-    .post-card {
-      padding: 1.5rem;
-    }
-
-    .post-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-
-    .post-title {
-      font-size: 1.1rem;
-    }
-  }
+/* Add subtle separation */
+.list-item:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
+}
 </style>

@@ -1,0 +1,62 @@
+---
+title: "Playing Mario the Plumber for Kafka"
+Image: ../../assets/images/pipelines-stretch-into-horizon-under-vibrant-sunset-creating-stunning-view-photo.jpg
+description: "Plugging a Kafka leak in a high throughput data pipeline"
+pubDate: 2026-07-19
+tags: ["kafka", "infrastructure", "performance"]
+---
+
+import { Image } from 'astro:assets';
+import heroImage from '../../assets/images/pipelines-stretch-into-horizon-under-vibrant-sunset-creating-stunning-view-photo.jpg';
+
+<div style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
+  <Image 
+    src={heroImage} 
+    alt="Pipelines stretching into the horizon under a vibrant sunset" 
+    style={{ borderRadius: '12px', maxWidth: '100%', height: 'auto', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)' }} 
+  />
+</div>
+
+## Background
+
+Kafka is an industry-wide standard for distributed data streaming. At its core, a producer writes records to Kafka, and consumers read them independently. This decoupling allows producers and consumers to process data at their own speeds. For a deep dive into its architecture, refer to the [official Kafka documentation](https://kafka.apache.org/43/getting-started/introduction/).
+
+In our infrastructure, we had a consumer application acting as a bridge. Its high-level flow was straightforward: it consumed messages from a legacy Kafka (0.8) cluster, processed them, and produced those messages to a brand new Kafka (3.x) cluster.
+
+---
+
+## Symptoms
+
+The symptoms were mostly silent but severely impacted our throughput. We architected the pipeline to handle an ingestion rate of around **2 million messages per second** at the new Kafka 3.x brokers, but we were maxing out between **1.1 and 1.2 million per second**.
+
+Alongside the throttled throughput, the CPU utilization across all new Kafka brokers was pinned at nearly **95%**. Interestingly, there was no network or disk I/O saturation. However,kafka broker metrics showed the request queue increasing steadily over time. (In Kafka, network threads push requests into this queue; if it fills up, it means the request handler threads are failing to keep pace with incoming traffic, this can point to either wasted cycles in processing or in the actual request).
+
+---
+
+## Investigation
+
+To find the bottleneck, I ran through the standard infrastructure checklist: CPU, disk I/O, and network saturation. With disk and network ruled out, the 95% CPU utilization was the obvious culprit.
+
+I took a thread dump of multiple Kafka brokers to see exactly where those CPU cycles were going. The thread dumps revealed the smoking gun: an excessive amount of thread cycles were dedicated to **compressing and decompressing** each and every message. While a few threads were desperately churning through these compression cycles, others were stuck in `WAITING` states, starving for data to return. 
+
+After spending some time in the trenches of Kafka documentation, I figured out that the root of the issue was a message protocol mismatch between what the consumer application was pushing and what the newer kafka cluster could process.
+
+---
+
+## Root Cause
+
+The root cause, while straightforward to fix, required digging into how Kafka clients and brokers communicate under the hood. It boiled down to a message format mismatch between the legacy producer client running in our bridge app and the modern brokers.
+
+Older Kafka clients speak an outdated wire protocol. When a 0.8 producer sends a message (using magic byte `v0` or `v1`) to a 3.x broker (which expects `v2`), it forces the broker to perform **message up-conversion**. 
+
+To stamp the offset and convert the format, the broker is forced to **open every single message batch**. This triggers an incredibly expensive pipeline: **decompress → re-encode to v2 → recompress**. Instead of just doing standard I/O, the brokers were forced to do massive ops for every message, leading their CPUs to crash and burn (almost) and completely bottlenecking the request handler threads.
+
+---
+
+## The Fix
+
+The fix was updating our dependencies in the bridge application. We upgraded the Kafka producer client to **3.x**, while deliberately leaving the consumer client on **0.8** (since it still needed to communicate with the legacy cluster).
+
+Because our consumer was already unpacking the messages in memory to process them anyway, all we had to do was let the new 3.x producer client handle the repacking. By doing this, the messages were natively packed into the modern `v2` format *before* they hit the wire.
+
+The result was immediate. The Kafka 3.x brokers stopped doing message up-conversion and returned to Kafka's famous "zero-copy" optimization—simply taking the pre-compressed `v2` byte streams from the network and appending them directly to disk. Broker CPU utilization plummeted, the request queues drained entirely, and our ingestion rate was able to scale up to the target 2 million messages per second.

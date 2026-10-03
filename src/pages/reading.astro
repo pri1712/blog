@@ -4,10 +4,22 @@ import { getCollection } from 'astro:content';
 
 const entries = (await getCollection('reading')).filter(e => !e.data.draft);
 
-const order = { reading: 0, queued: 1, done: 2 } as const;
+type Status = 'reading' | 'queued' | 'done';
+
+const order: Record<Status, number> = {
+  reading: 0,
+  queued: 1,
+  done: 2,
+};
+
 const sortFn = (a: typeof entries[number], b: typeof entries[number]) => {
-  const s = order[a.data.status] - order[b.data.status];
+  const statusA = a.data.status as Status;
+  const statusB = b.data.status as Status;
+
+  const s = order[statusA] - order[statusB];
+
   if (s !== 0) return s;
+
   return (b.data.year ?? 0) - (a.data.year ?? 0);
 };
 
@@ -24,15 +36,35 @@ const groups = [
   <main class="container">
     <section>
       <h1>Reading</h1>
+
       <p class="subtitle">
-        Papers and books I'm working through — distributed systems, storage,
-        and whatever else catches my eye. Notes are my own, usually opinionated.
+        <span>
+          I read research papers around distributed systems/large scale storage
+          systems and books often.
+        </span>
+
+        <span>
+          I enjoy reading about anthropology and human behaviour quite a bit and am
+          trying to get more into it. I use this page to mainly try and write
+          something of my own in this age of AI.
+        </span>
+
+        <span>
+          I try to be active on
+          <a
+            href="https://www.goodreads.com/user/show/200283248-reader"
+            target="_blank"
+            rel="noopener"
+          >Goodreads</a>
+          too.
+        </span>
       </p>
     </section>
 
     {groups.map(group => (
       <section>
         <h2>{group.title}</h2>
+
         {group.items.length === 0 ? (
           <p class="empty">{group.empty}</p>
         ) : (
@@ -41,26 +73,40 @@ const groups = [
               <li class="item">
                 <div class="row">
                   {e.data.link ? (
-                    <a href={e.data.link} target="_blank" rel="noopener" class="title">
+                    <a
+                      href={e.data.link}
+                      target="_blank"
+                      rel="noopener"
+                      class="title"
+                    >
                       {e.data.title}
                     </a>
                   ) : (
                     <span class="title">{e.data.title}</span>
                   )}
-                  <span class={`status ${e.data.status}`}>{e.data.status}</span>
+
+                  <span class={`status ${e.data.status}`}>
+                    {e.data.status}
+                  </span>
                 </div>
 
                 {(e.data.authors || e.data.year) && (
                   <p class="byline">
-                    {e.data.authors}{e.data.authors && e.data.year ? ' · ' : ''}{e.data.year}
+                    {e.data.authors}
+                    {e.data.authors && e.data.year ? ' · ' : ''}
+                    {e.data.year}
                   </p>
                 )}
 
-                {e.data.note && <p class="note">{e.data.note}</p>}
+                {e.data.note && (
+                  <p class="note">{e.data.note}</p>
+                )}
 
                 {e.data.tags.length > 0 && (
                   <div class="tags">
-                    {e.data.tags.map(t => <span class="tag">{t}</span>)}
+                    {e.data.tags.map((tag: string) => (
+                      <span class="tag">{tag}</span>
+                    ))}
                   </div>
                 )}
               </li>
@@ -87,6 +133,24 @@ const groups = [
   .subtitle {
     color: var(--gray);
     margin-bottom: 2.5rem;
+  }
+
+  .subtitle span {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .subtitle span:last-child {
+    margin-bottom: 0;
+  }
+
+  .subtitle a {
+    color: var(--fg);
+    text-decoration: underline;
+  }
+
+  .subtitle a:hover {
+    color: var(--green);
   }
 
   h2 {
@@ -169,9 +233,19 @@ const groups = [
     border: 1px solid var(--border);
   }
 
-  .status.reading { color: var(--yellow); border-color: var(--yellow); }
-  .status.done    { color: var(--green);  border-color: var(--green); }
-  .status.queued  { color: var(--gray); }
+  .status.reading {
+    color: var(--yellow);
+    border-color: var(--yellow);
+  }
+
+  .status.done {
+    color: var(--green);
+    border-color: var(--green);
+  }
+
+  .status.queued {
+    color: var(--gray);
+  }
 
   .empty {
     color: var(--gray);

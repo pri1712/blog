@@ -1,0 +1,180 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('reading')).filter(e => !e.data.draft);
+
+const order = { reading: 0, queued: 1, done: 2 } as const;
+const sortFn = (a: typeof entries[number], b: typeof entries[number]) => {
+  const s = order[a.data.status] - order[b.data.status];
+  if (s !== 0) return s;
+  return (b.data.year ?? 0) - (a.data.year ?? 0);
+};
+
+const papers = entries.filter(e => e.data.kind === 'paper').sort(sortFn);
+const books = entries.filter(e => e.data.kind === 'book').sort(sortFn);
+
+const groups = [
+  { title: 'Papers', items: papers, empty: 'No papers yet.' },
+  { title: 'Books', items: books, empty: 'No books yet.' },
+];
+---
+
+<BaseLayout title="Reading">
+  <main class="container">
+    <section>
+      <h1>Reading</h1>
+      <p class="subtitle">
+        Papers and books I'm working through — distributed systems, storage,
+        and whatever else catches my eye. Notes are my own, usually opinionated.
+      </p>
+    </section>
+
+    {groups.map(group => (
+      <section>
+        <h2>{group.title}</h2>
+        {group.items.length === 0 ? (
+          <p class="empty">{group.empty}</p>
+        ) : (
+          <ul class="list">
+            {group.items.map(e => (
+              <li class="item">
+                <div class="row">
+                  {e.data.link ? (
+                    <a href={e.data.link} target="_blank" rel="noopener" class="title">
+                      {e.data.title}
+                    </a>
+                  ) : (
+                    <span class="title">{e.data.title}</span>
+                  )}
+                  <span class={`status ${e.data.status}`}>{e.data.status}</span>
+                </div>
+
+                {(e.data.authors || e.data.year) && (
+                  <p class="byline">
+                    {e.data.authors}{e.data.authors && e.data.year ? ' · ' : ''}{e.data.year}
+                  </p>
+                )}
+
+                {e.data.note && <p class="note">{e.data.note}</p>}
+
+                {e.data.tags.length > 0 && (
+                  <div class="tags">
+                    {e.data.tags.map(t => <span class="tag">{t}</span>)}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+    ))}
+  </main>
+</BaseLayout>
+
+<style>
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitle {
+    color: var(--gray);
+    margin-bottom: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+    margin: 2.5rem 0 1rem;
+  }
+
+  h2::before {
+    content: 'λ ';
+    color: var(--green);
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .item {
+    padding-bottom: 1.5rem;
+  }
+
+  .item:not(:last-child) {
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--fg);
+    line-height: 1.4;
+  }
+
+  .title:hover {
+    text-decoration: underline;
+    background: transparent;
+  }
+
+  .byline {
+    color: var(--gray);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .note {
+    margin-top: 0.6rem;
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .tags {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    color: var(--gray);
+    border: 1px solid var(--border);
+    padding: 0.05rem 0.4rem;
+    border-radius: 2px;
+  }
+
+  .status {
+    font-size: 0.72rem;
+    white-space: nowrap;
+    padding: 0.1rem 0.45rem;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+  }
+
+  .status.reading { color: var(--yellow); border-color: var(--yellow); }
+  .status.done    { color: var(--green);  border-color: var(--green); }
+  .status.queued  { color: var(--gray); }
+
+  .empty {
+    color: var(--gray);
+    font-size: 0.95rem;
+  }
+</style>
